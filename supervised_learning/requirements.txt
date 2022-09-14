@@ -1,0 +1,10 @@
+# # local package
+# -e .
+
+# external requirements
+pandas
+torchvision
+jupyter
+jupyterlab
+sklearn
+nltk
