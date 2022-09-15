@@ -4,9 +4,9 @@ from src.config.config import MODEL_MAPPING
 from src.features.nba_features import PlayerPositionEncoder, TeamsEncoder
 
 
-def build_tweet_sentiment_model(model_type):
+def build_career_duration_model(model_type):
     """
-    Constructs the tweet sentiment model pipeline that switch between different models
+    Constructs the career duration model pipeline that switches between different models
     """
     pipeline = Pipeline(
         [

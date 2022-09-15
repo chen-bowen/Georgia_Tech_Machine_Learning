@@ -6,7 +6,7 @@ from src.features.twitter_features import TweetPreprocessor
 
 def build_tweet_sentiment_model(model_type):
     """
-    Constructs the tweet sentiment model pipeline that switch between different models
+    Constructs the tweet sentiment model pipeline that switches between different models
     """
     pipeline = Pipeline(
         [
