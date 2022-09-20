@@ -3,8 +3,8 @@
 
 # external requirements
 pandas
-torchvision
 jupyter
 jupyterlab
 sklearn
 nltk
+matplotlib

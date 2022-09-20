@@ -1,5 +1,8 @@
 import pandas as pd
 from sklearn.base import BaseEstimator
+from src.config.config import ALL_POSITIONS, ALL_TEAMS
+
+# from sklearn.preprocessing import LabelBinarizer
 
 
 class TeamsEncoder(BaseEstimator):
@@ -26,7 +29,10 @@ class TeamsEncoder(BaseEstimator):
     def transform(self, X):
         """only 30 teams in the league and expected no unknown values, so use pd.get_dummies"""
         X[self.team_variable] = (
-            X[self.team_variable].map(self.teams_map).fillna(X[self.team_variable])
+            X[self.team_variable]
+            .map(self.teams_map)
+            .fillna(X[self.team_variable])
+            .astype(pd.CategoricalDtype(categories=ALL_TEAMS))
         )
         X = X.drop([self.team_variable], axis=1).join(
             pd.get_dummies(X[self.team_variable])
@@ -46,7 +52,12 @@ class PlayerPositionEncoder(BaseEstimator):
     def transform(self, X):
         """only 5 positions and expected no unknown values, so use pd.get_dummies"""
         # select the players' first position to reduce the variations
-        X["pos"] = X["pos"].str.split("-").apply(lambda x: x[0])
+        X[self.position_variable] = (
+            X[self.position_variable]
+            .str.split("-")
+            .apply(lambda x: x[0])
+            .astype(pd.CategoricalDtype(categories=ALL_POSITIONS))
+        )
         X = X.drop([self.position_variable], axis=1).join(
             pd.get_dummies(X[self.position_variable])
         )
