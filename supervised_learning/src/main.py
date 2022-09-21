@@ -48,10 +48,11 @@ def generate_model_analysis_plot(X, y, dataset_name):
         best_params_res = tuned_model.best_estimator_.get_params()  # type: ignore
 
         # creat model with the best parameters
+        best_param_value = best_params_res[
+            MODEL_MAPPING[model_type]["tuned_params_name"]
+        ]
         best_params = {
-            MODEL_MAPPING[model_type]["actual_params_name"]: best_params_res[
-                MODEL_MAPPING[model_type]["tuned_params_name"]
-            ]
+            MODEL_MAPPING[model_type]["actual_params_name"]: best_param_value
         }
         # add iteration to 500 if it's neural network
         if model_type == "Neural Network":
@@ -64,7 +65,9 @@ def generate_model_analysis_plot(X, y, dataset_name):
 
         # plot learning curve with default parameters
         plot_learning_curve(
+            model_type,
             "Default",
+            MODEL_MAPPING[model_type]["default_value"],
             model_default,
             X,
             y,
@@ -76,7 +79,11 @@ def generate_model_analysis_plot(X, y, dataset_name):
 
         # plot learning curve with the best parameters
         plot_learning_curve(
+            model_type,
             "Best",
+            round(best_param_value, 2)
+            if isinstance(best_param_value, float)
+            else best_param_value,
             model_best,
             X,
             y,
@@ -87,8 +94,10 @@ def generate_model_analysis_plot(X, y, dataset_name):
         )
 
         # save figure
-        plt.suptitle(f"{model_type} Model with Default and Best Parameters")
-        plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+        plt.suptitle(
+            f"{model_type} Model with Default and Best Parameters", fontsize=20
+        )
+        plt.tight_layout(rect=[0, 0.01, 1, 0.99])
         plt.savefig(f"../reports/figures/{model_type}_{dataset_name}.jpg", dpi=150)
 
         # end timer

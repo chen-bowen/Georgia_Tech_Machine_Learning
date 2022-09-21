@@ -1,10 +1,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.model_selection import learning_curve
+from src.config.config import MODEL_MAPPING
 
 
 def plot_learning_curve(
+    model_name,
     params_type,
+    params_value,
     estimator,
     X,
     y,
@@ -88,7 +91,12 @@ def plot_learning_curve(
     if axes is None:
         _, axes = plt.subplots(1, 4, figsize=(24, 5))
 
-    axes[0].set_title(f"Learning Curve with {params_type} Parameters")
+    axes[0].set_title(
+        f"""
+        Learning Curve with {params_type} Parameters
+         {MODEL_MAPPING[model_name]['actual_params_name']} = {params_value}
+        """
+    )
     if ylim is not None:
         axes[0].set_ylim(*ylim)
     axes[0].set_xlabel("Training Instances")
