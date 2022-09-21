@@ -1,3 +1,4 @@
+# pylint: disable=import-error
 from scipy.stats import randint, uniform
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -45,7 +46,7 @@ MODEL_PARAMS_SPACE = {
     },
     "AdaBoost": {"classifier__n_estimators": randint(5, 100)},
     "SVC": {"classifier__kernel": ["linear", "poly", "rbf", "sigmoid"]},
-    "KNN": {"classifier__n_neighbors": randint(2, 50)},
+    "KNN": {"classifier__n_neighbors": randint(2, 20)},
 }
 
 RANDOM_SEED = 7

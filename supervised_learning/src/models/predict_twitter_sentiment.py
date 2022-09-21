@@ -4,7 +4,7 @@ from src.config.config import MODEL_MAPPING
 from src.features.twitter_features import TweetPreprocessor
 
 
-def build_tweet_sentiment_model(model_type):
+def build_tweet_sentiment_model(model_type, params):
     """
     Constructs the tweet sentiment model pipeline that switches between different models
     """
@@ -15,9 +15,7 @@ def build_tweet_sentiment_model(model_type):
             ("tfidf", TfidfTransformer()),
             (
                 "classifier",
-                MODEL_MAPPING[model_type]["model"](
-                    **MODEL_MAPPING[model_type]["params"]
-                ),
+                MODEL_MAPPING[model_type]["model"](**params),
             ),
         ]
     )

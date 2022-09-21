@@ -1,6 +1,5 @@
 import re
 
-import nltk
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from sklearn.base import BaseEstimator
@@ -21,7 +20,6 @@ class TweetPreprocessor(BaseEstimator):
 
     def set_nltk_resource(self):
         # download nltk resources
-        nltk.download("stopwords")
         self.english_stop_words = stopwords.words("english")
 
     def remove_additional_chars(self, df):
