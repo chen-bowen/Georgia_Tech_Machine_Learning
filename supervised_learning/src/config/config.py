@@ -47,7 +47,7 @@ MODEL_MAPPING = {
 MODEL_PARAMS_SPACE = {
     "Decision Tree": {"classifier__ccp_alpha": uniform(0, 1)},
     "Neural Network": {
-        "classifier__hidden_layer_sizes": [(20, 5), (50, 10), (50,)],
+        "classifier__hidden_layer_sizes": [(20, 5), (50, 10), (20,), (50,)],
     },
     "AdaBoost": {"classifier__n_estimators": randint(5, 100)},
     "SVC": {"classifier__kernel": ["linear", "poly", "rbf", "sigmoid"]},

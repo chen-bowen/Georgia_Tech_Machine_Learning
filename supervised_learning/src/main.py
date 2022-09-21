@@ -11,6 +11,7 @@ from src.models.predict_career_duration import build_career_duration_model
 from src.models.predict_twitter_sentiment import build_tweet_sentiment_model
 from src.visualization.visualize import plot_learning_curve
 
+simplefilter("ignore", category=ConvergenceWarning)
 
 def generate_model_analysis_plot(X, y, dataset_name):
     """
@@ -24,9 +25,7 @@ def generate_model_analysis_plot(X, y, dataset_name):
         "Twitter": build_tweet_sentiment_model,
     }
 
-    simplefilter("ignore", category=ConvergenceWarning)
-
-    for model_type in ["Decision Tree", "Neural Network", "AdaBoost", "SVC", "KNN"]:
+    for model_type in ["Neural Network"]: #["Decision Tree", "Neural Network", "AdaBoost", "SVC", "KNN"]:
         # start timer
         start = time.perf_counter()
         # build model pipeline
@@ -56,7 +55,7 @@ def generate_model_analysis_plot(X, y, dataset_name):
         }
         # add iteration to 500 if it's neural network
         if model_type == "Neural Network":
-            best_params["max_iter"] = 500
+            best_params["max_iter"] = 1000
 
         model_best = ANALYSIS_DATASET_MAP[dataset_name](model_type, best_params)
 
