@@ -4,7 +4,7 @@ from src.config.config import MODEL_MAPPING
 from src.features.nba_features import PlayerPositionEncoder, TeamsEncoder
 
 
-def build_career_duration_model(model_type):
+def build_career_duration_model(model_type, params):
     """
     Constructs the career duration model pipeline that switches between different models
     """
@@ -13,12 +13,7 @@ def build_career_duration_model(model_type):
             ("player_position", PlayerPositionEncoder("pos")),
             ("team", TeamsEncoder("tm")),
             ("scaler", StandardScaler()),
-            (
-                "classifier",
-                MODEL_MAPPING[model_type]["model"](
-                    **MODEL_MAPPING[model_type]["params"]
-                ),
-            ),
+            ("classifier", MODEL_MAPPING[model_type]["model"](**params)),
         ]
     )
     return pipeline

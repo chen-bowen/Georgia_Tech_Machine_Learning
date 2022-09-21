@@ -8,3 +8,4 @@ jupyterlab
 sklearn
 nltk
 matplotlib
+nb_black

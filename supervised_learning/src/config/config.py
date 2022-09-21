@@ -1,3 +1,4 @@
+from scipy.stats import randint, uniform
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
@@ -5,14 +6,46 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
 MODEL_MAPPING = {
-    "decision tree": {"model": DecisionTreeClassifier, "params": {"ccp_alpha": 0.0}},
-    "neural network": {
+    "Decision Tree": {
+        "model": DecisionTreeClassifier,
+        "params": {"ccp_alpha": 0.0},
+        "actual_params_name": "ccp_alpha",
+        "tuned_params_name": "classifier__ccp_alpha",
+    },
+    "Neural Network": {
         "model": MLPClassifier,
         "params": {"hidden_layer_sizes": (50, 10), "max_iter": 500},
+        "actual_params_name": "hidden_layer_sizes",
+        "tuned_params_name": "classifier__hidden_layer_sizes",
     },
-    "adaboost": {"model": AdaBoostClassifier, "params": {"n_estimators": 50}},
-    "svc": {"model": SVC, "params": {"kernel": "rbf"}},
-    "knn": {"model": KNeighborsClassifier, "params": {"n_neighbors": 5}},
+    "AdaBoost": {
+        "model": AdaBoostClassifier,
+        "params": {"n_estimators": 50},
+        "actual_params_name": "n_estimators",
+        "tuned_params_name": "classifier__n_estimators",
+    },
+    "SVC": {
+        "model": SVC,
+        "params": {"kernel": "rbf"},
+        "actual_params_name": "kernel",
+        "tuned_params_name": "classifier__kernel",
+    },
+    "KNN": {
+        "model": KNeighborsClassifier,
+        "params": {"n_neighbors": 5},
+        "actual_params_name": "n_neighbors",
+        "tuned_params_name": "classifier__n_neighbors",
+    },
+}
+
+MODEL_PARAMS_SPACE = {
+    "Decision Tree": {"classifier__ccp_alpha": uniform(0, 1)},
+    "Neural Network": {
+        "classifier__hidden_layer_sizes": [(20, 5), (50, 10), (100,)],
+    },
+    "AdaBoost": {"classifier__n_estimators": randint(5, 100)},
+    "SVC": {"classifier__kernel": ["linear", "poly", "rbf", "sigmoid"]},
+    "KNN": {"classifier__n_neighbors": randint(2, 50)},
 }
 
 RANDOM_SEED = 7

@@ -4,8 +4,6 @@ from sklearn.model_selection import learning_curve
 
 
 def plot_learning_curve(
-    model_name,
-    dataset_name,
     params_type,
     estimator,
     X,
@@ -88,15 +86,13 @@ def plot_learning_curve(
         (default: np.linspace(0.1, 1.0, 5))
     """
     if axes is None:
-        _, axes = plt.subplots(1, 4, figsize=(20, 5))
+        _, axes = plt.subplots(1, 4, figsize=(24, 5))
 
-    plt.suptitle(f"{model_name} with {params_type} Parameters", fontsize=15)
-
-    axes[0].set_title("Learning Curve")
+    axes[0].set_title(f"Learning Curve with {params_type} Parameters")
     if ylim is not None:
         axes[0].set_ylim(*ylim)
-    axes[0].set_xlabel("Training examples")
-    axes[0].set_ylabel("Score")
+    axes[0].set_xlabel("Training Instances")
+    axes[0].set_ylabel("Accuracy")
 
     train_sizes, train_scores, test_scores, fit_times, score_times = learning_curve(  # type: ignore
         estimator,
@@ -151,8 +147,8 @@ def plot_learning_curve(
         alpha=0.1,
     )
     axes[1].set_xlabel("Training examples")
-    axes[1].set_ylabel("fit_times")
-    axes[1].set_title("Scalability of the model-  Training Wall Time")
+    axes[1].set_ylabel("Fit Times")
+    axes[1].set_title("Scalability - Training Wall Time")
 
     # Plot n_samples vs score_times
     axes[2].grid()
@@ -163,9 +159,9 @@ def plot_learning_curve(
         score_times_mean + score_times_std,
         alpha=0.1,
     )
-    axes[2].set_xlabel("Training examples")
-    axes[2].set_ylabel("fit_times")
-    axes[2].set_title("Scalability of the model-  Scoring Wall Time")
+    axes[2].set_xlabel("Scoring Instances")
+    axes[2].set_ylabel("Fit Times")
+    axes[2].set_title("Scalability - Scoring Wall Time")
 
     # Plot fit_time vs score
     fit_time_argsort = fit_times_mean.argsort()
@@ -182,9 +178,6 @@ def plot_learning_curve(
     )
     axes[3].set_xlabel("fit_times")
     axes[3].set_ylabel("Accuracy")
-    axes[3].set_title("Performance of the model on Validation Data")
-
-    # save figure
-    plt.savefig(f"../reports/figures/{model_name}_{dataset_name}.jpg", dpi=150)
+    axes[3].set_title("Performance - Accuracy on Validation Data")
 
     return plt
