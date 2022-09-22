@@ -1,7 +1,12 @@
+import warnings
+
+from sklearn.exceptions import ConvergenceWarning
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.pipeline import Pipeline
 from src.config.config import MODEL_MAPPING
 from src.features.twitter_features import TweetPreprocessor
+
+warnings.filterwarnings("ignore", category=ConvergenceWarning, module="sklearn")
 
 
 def build_tweet_sentiment_model(model_type, params):

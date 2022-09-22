@@ -47,7 +47,7 @@ class TwitterDataset:
         data = pd.concat([self.train_data, self.test_data])
 
         # sample to get a smaller dataset
-        data = data.groupby("tweet_id").head(1)
+        data = data.groupby("tweet_id").head(2)
 
         # get the training, validation and test data and save to X, y attributes
         y = data["sentiment"].map(self.label_encode_mapping)

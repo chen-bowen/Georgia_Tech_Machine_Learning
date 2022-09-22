@@ -6,7 +6,6 @@ from src.config.config import MODEL_MAPPING
 
 def plot_learning_curve(
     model_name,
-    params_type,
     params_value,
     estimator,
     X,
@@ -93,7 +92,7 @@ def plot_learning_curve(
 
     axes[0].set_title(
         f"""
-        Learning Curve with {params_type} Parameters
+        Learning Curve
          {MODEL_MAPPING[model_name]['actual_params_name']} = {params_value}
         """
     )

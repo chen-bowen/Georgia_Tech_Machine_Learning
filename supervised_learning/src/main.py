@@ -1,9 +1,7 @@
 import time
-import warnings
 
 import matplotlib.pyplot as plt
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.model_selection import RandomizedSearchCV, ShuffleSplit
+from sklearn.model_selection import ShuffleSplit
 from src.config.config import MODEL_MAPPING, MODEL_PARAMS_SPACE, RANDOM_SEED
 from src.data.nba_dataset import NBADataset
 from src.data.twitter_dataset import TwitterDataset
@@ -31,36 +29,12 @@ def generate_model_analysis_plot(X, y, dataset_name):
         model_default = ANALYSIS_DATASET_MAP[dataset_name](
             model_type, MODEL_MAPPING[model_type]["params"]
         )
+        model_variant = ANALYSIS_DATASET_MAP[dataset_name](
+            model_type, MODEL_PARAMS_SPACE[model_type]
+        )
 
         # create cross validation object
         cv = ShuffleSplit(n_splits=15, test_size=0.1, random_state=RANDOM_SEED)
-
-        # perform random search for the optimal parameters
-        params_search = RandomizedSearchCV(
-            model_default,
-            MODEL_PARAMS_SPACE[model_type],
-            n_iter=100,
-            cv=5,
-            random_state=RANDOM_SEED,
-        )
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=ConvergenceWarning, module="sklearn")
-            tuned_model = params_search.fit(X, y)
-
-        best_params_res = tuned_model.best_estimator_.get_params()  # type: ignore
-
-        # creat model with the best parameters
-        best_param_value = best_params_res[
-            MODEL_MAPPING[model_type]["tuned_params_name"]
-        ]
-        best_params = {
-            MODEL_MAPPING[model_type]["actual_params_name"]: best_param_value
-        }
-        # add iteration to 500 if it's neural network
-        if model_type == "Neural Network":
-            best_params["max_iter"] = 500
-
-        model_best = ANALYSIS_DATASET_MAP[dataset_name](model_type, best_params)
 
         # initialize figure
         _, axes = plt.subplots(4, 2, figsize=(10, 20))
@@ -68,13 +42,12 @@ def generate_model_analysis_plot(X, y, dataset_name):
         # plot learning curve with default parameters
         plot_learning_curve(
             model_type,
-            "Default",
             MODEL_MAPPING[model_type]["default_value"],
             model_default,
             X,
             y,
             axes=axes[:, 0],  # type: ignore
-            ylim=(0.7, 1.01),
+            ylim=(0.5, 1.01),
             cv=cv,
             n_jobs=4,
         )
@@ -82,15 +55,14 @@ def generate_model_analysis_plot(X, y, dataset_name):
         # plot learning curve with the best parameters
         plot_learning_curve(
             model_type,
-            "Best",
-            round(best_param_value, 2)
-            if isinstance(best_param_value, float)
-            else best_param_value,
-            model_best,
+            MODEL_PARAMS_SPACE[model_type][
+                MODEL_MAPPING[model_type]["actual_params_name"]
+            ],
+            model_variant,
             X,
             y,
             axes=axes[:, 1],  # type: ignore
-            ylim=(0.7, 1.01),
+            ylim=(0.5, 1.01),
             cv=cv,
             n_jobs=4,
         )

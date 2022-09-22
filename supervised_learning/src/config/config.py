@@ -1,5 +1,4 @@
 # pylint: disable=import-error
-from scipy.stats import randint, uniform
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
@@ -16,7 +15,7 @@ MODEL_MAPPING = {
     },
     "Neural Network": {
         "model": MLPClassifier,
-        "params": {"hidden_layer_sizes": (16, 8), "max_iter": 500},
+        "params": {"hidden_layer_sizes": (16, 8), "max_iter": 1000},
         "default_value": (16, 8),
         "actual_params_name": "hidden_layer_sizes",
         "tuned_params_name": "classifier__hidden_layer_sizes",
@@ -45,13 +44,11 @@ MODEL_MAPPING = {
 }
 
 MODEL_PARAMS_SPACE = {
-    "Decision Tree": {"classifier__ccp_alpha": uniform(0, 1)},
-    "Neural Network": {
-        "classifier__hidden_layer_sizes": [(16, 8), (32, 16), (32,), (16,)],
-    },
-    "AdaBoost": {"classifier__n_estimators": randint(5, 100)},
-    "SVC": {"classifier__kernel": ["linear", "poly", "rbf", "sigmoid"]},
-    "KNN": {"classifier__n_neighbors": randint(2, 20)},
+    "Decision Tree": {"ccp_alpha": 0.08},
+    "Neural Network": {"hidden_layer_sizes": (16,), "max_iter": 1000},
+    "AdaBoost": {"n_estimators": 5},
+    "SVC": {"kernel": "linear"},
+    "KNN": {"n_neighbors": 20},
 }
 
 RANDOM_SEED = 7
