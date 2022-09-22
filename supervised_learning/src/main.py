@@ -1,5 +1,5 @@
 import time
-from warnings import simplefilter
+import warnings
 
 import matplotlib.pyplot as plt
 from sklearn.exceptions import ConvergenceWarning
@@ -11,7 +11,6 @@ from src.models.predict_career_duration import build_career_duration_model
 from src.models.predict_twitter_sentiment import build_tweet_sentiment_model
 from src.visualization.visualize import plot_learning_curve
 
-simplefilter("ignore", category=ConvergenceWarning)
 
 def generate_model_analysis_plot(X, y, dataset_name):
     """
@@ -25,7 +24,7 @@ def generate_model_analysis_plot(X, y, dataset_name):
         "Twitter": build_tweet_sentiment_model,
     }
 
-    for model_type in ["Neural Network"]: #["Decision Tree", "Neural Network", "AdaBoost", "SVC", "KNN"]:
+    for model_type in ["Decision Tree", "Neural Network", "AdaBoost", "SVC", "KNN"]:
         # start timer
         start = time.perf_counter()
         # build model pipeline
@@ -34,7 +33,8 @@ def generate_model_analysis_plot(X, y, dataset_name):
         )
 
         # create cross validation object
-        cv = ShuffleSplit(n_splits=50, test_size=0.1, random_state=RANDOM_SEED)
+        cv = ShuffleSplit(n_splits=15, test_size=0.1, random_state=RANDOM_SEED)
+
         # perform random search for the optimal parameters
         params_search = RandomizedSearchCV(
             model_default,
@@ -43,7 +43,10 @@ def generate_model_analysis_plot(X, y, dataset_name):
             cv=5,
             random_state=RANDOM_SEED,
         )
-        tuned_model = params_search.fit(X, y)
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=ConvergenceWarning, module="sklearn")
+            tuned_model = params_search.fit(X, y)
+
         best_params_res = tuned_model.best_estimator_.get_params()  # type: ignore
 
         # creat model with the best parameters
@@ -55,7 +58,7 @@ def generate_model_analysis_plot(X, y, dataset_name):
         }
         # add iteration to 500 if it's neural network
         if model_type == "Neural Network":
-            best_params["max_iter"] = 1000
+            best_params["max_iter"] = 500
 
         model_best = ANALYSIS_DATASET_MAP[dataset_name](model_type, best_params)
 

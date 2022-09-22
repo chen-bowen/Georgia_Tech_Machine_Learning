@@ -16,8 +16,8 @@ MODEL_MAPPING = {
     },
     "Neural Network": {
         "model": MLPClassifier,
-        "params": {"hidden_layer_sizes": (50,), "max_iter": 500},
-        "default_value": (50,),
+        "params": {"hidden_layer_sizes": (16, 8), "max_iter": 500},
+        "default_value": (16, 8),
         "actual_params_name": "hidden_layer_sizes",
         "tuned_params_name": "classifier__hidden_layer_sizes",
     },
@@ -31,14 +31,14 @@ MODEL_MAPPING = {
     "SVC": {
         "model": SVC,
         "params": {"kernel": "rbf"},
-        "default_value":  "rbf",
+        "default_value": "rbf",
         "actual_params_name": "kernel",
         "tuned_params_name": "classifier__kernel",
     },
     "KNN": {
         "model": KNeighborsClassifier,
         "params": {"n_neighbors": 5},
-         "default_value":  5,
+        "default_value": 5,
         "actual_params_name": "n_neighbors",
         "tuned_params_name": "classifier__n_neighbors",
     },
@@ -47,7 +47,7 @@ MODEL_MAPPING = {
 MODEL_PARAMS_SPACE = {
     "Decision Tree": {"classifier__ccp_alpha": uniform(0, 1)},
     "Neural Network": {
-        "classifier__hidden_layer_sizes": [(20, 5), (50, 10), (20,), (50,)],
+        "classifier__hidden_layer_sizes": [(16, 8), (32, 16), (32,), (16,)],
     },
     "AdaBoost": {"classifier__n_estimators": randint(5, 100)},
     "SVC": {"classifier__kernel": ["linear", "poly", "rbf", "sigmoid"]},
