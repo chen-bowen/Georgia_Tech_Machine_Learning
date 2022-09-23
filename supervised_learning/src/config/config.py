@@ -11,43 +11,38 @@ MODEL_MAPPING = {
         "params": {"ccp_alpha": 0.0},
         "default_value": 0.0,
         "actual_params_name": "ccp_alpha",
-        "tuned_params_name": "classifier__ccp_alpha",
     },
     "Neural Network": {
         "model": MLPClassifier,
-        "params": {"hidden_layer_sizes": (16, 8), "max_iter": 1000},
-        "default_value": (16, 8),
+        "params": {"hidden_layer_sizes": (32,), "max_iter": 2000},
+        "default_value": (32,),
         "actual_params_name": "hidden_layer_sizes",
-        "tuned_params_name": "classifier__hidden_layer_sizes",
     },
     "AdaBoost": {
         "model": AdaBoostClassifier,
         "params": {"n_estimators": 50},
         "default_value": 50,
         "actual_params_name": "n_estimators",
-        "tuned_params_name": "classifier__n_estimators",
     },
     "SVC": {
         "model": SVC,
-        "params": {"kernel": "rbf"},
-        "default_value": "rbf",
+        "params": {"kernel": "linear"},
+        "default_value": "linear",
         "actual_params_name": "kernel",
-        "tuned_params_name": "classifier__kernel",
     },
     "KNN": {
         "model": KNeighborsClassifier,
         "params": {"n_neighbors": 5},
         "default_value": 5,
         "actual_params_name": "n_neighbors",
-        "tuned_params_name": "classifier__n_neighbors",
     },
 }
 
 MODEL_PARAMS_SPACE = {
     "Decision Tree": {"ccp_alpha": 0.08},
-    "Neural Network": {"hidden_layer_sizes": (16,), "max_iter": 1000},
-    "AdaBoost": {"n_estimators": 5},
-    "SVC": {"kernel": "linear"},
+    "Neural Network": {"hidden_layer_sizes": (32, 16), "max_iter": 2000},
+    "AdaBoost": {"n_estimators": 50},
+    "SVC": {"kernel": "rbf"},
     "KNN": {"n_neighbors": 20},
 }
 

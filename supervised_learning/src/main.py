@@ -68,9 +68,7 @@ def generate_model_analysis_plot(X, y, dataset_name):
         )
 
         # save figure
-        plt.suptitle(
-            f"{model_type} Model with Default and Best Parameters", fontsize=20
-        )
+        plt.suptitle(f"{model_type} Model For {dataset_name} Dataset", fontsize=20)
         plt.tight_layout(rect=[0, 0.01, 1, 0.99])
         plt.savefig(f"../reports/figures/{model_type}_{dataset_name}.jpg", dpi=150)
 
