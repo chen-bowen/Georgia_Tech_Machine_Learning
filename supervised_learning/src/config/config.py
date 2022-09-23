@@ -20,8 +20,8 @@ MODEL_MAPPING = {
     },
     "AdaBoost": {
         "model": AdaBoostClassifier,
-        "params": {"n_estimators": 50},
-        "default_value": 50,
+        "params": {"n_estimators": 10},
+        "default_value": 10,
         "actual_params_name": "n_estimators",
     },
     "SVC": {
