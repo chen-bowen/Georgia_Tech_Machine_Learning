@@ -2,8 +2,9 @@
 
 ### How to get data
 
-The NBA dataset: https://www.kaggle.com/datasets/sumitrodatta/nba-aba-baa-stats
-The Twitter Sentiment dataset: https://www.kaggle.com/datasets/jp797498e/twitter-entity-sentiment-analysis
+The NBA dataset: [link here](https://www.kaggle.com/datasets/sumitrodatta/nba-aba-baa-stats)
+
+The Twitter Sentiment dataset: [link here](https://www.kaggle.com/datasets/jp797498e/twitter-entity-sentiment-analysis)
 
 ### How to run the analysis
 
