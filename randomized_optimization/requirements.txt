@@ -1,0 +1,12 @@
+# # local package
+# -e .
+
+# external requirements
+pandas
+jupyter
+jupyterlab
+sklearn
+nltk
+mlrose-hiive
+matplotlib
+nb_black
