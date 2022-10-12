@@ -18,10 +18,7 @@ def build_tweet_sentiment_model(model_type, params):
             ("tweet_preprocessor", TweetPreprocessor("tweet_content")),
             ("vec", CountVectorizer()),
             ("tfidf", TfidfTransformer()),
-            (
-                "classifier",
-                MODEL_MAPPING[model_type]["model"](**params),
-            ),
+            ("classifier", MODEL_MAPPING[model_type]["model"](**params),),
         ]
     )
     return pipeline

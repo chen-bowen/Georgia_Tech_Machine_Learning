@@ -1,10 +1,12 @@
 import time
 
-from src.config.config import (ALGORITHM_MAPPING, PROBLEM_NAME_MAPPING,
-                               PROBLEM_PARAMS_MAPPING)
+from src.config.config import (
+    ALGORITHM_MAPPING,
+    PROBLEM_NAME_MAPPING,
+    PROBLEM_PARAMS_MAPPING,
+)
 from src.models.discrete_problems import solver
-from src.visualization.visualize import (plot_fitness_curves,
-                                         plot_walltime_chart)
+from src.visualization.visualize import plot_fitness_curves, plot_walltime_chart
 
 
 def discrete_problem_analysis(problem_name):
