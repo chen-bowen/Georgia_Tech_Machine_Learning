@@ -1,7 +1,8 @@
 import mlrose_hiive as mlrose
 import numpy as np
 from src.config.config import (
-    ALGORITHM_HYPERPARAMS_MAPPING,
+    ALGORITHM_HYPERPARAMS_DEFAULT_MAPPING,
+    ALGORITHM_HYPERPARAMS_TUNED_MAPPING,
     ALGORITHM_MAPPING,
     RANDOM_SEED,
 )
@@ -73,7 +74,7 @@ def knapsack_problem(
     return problem_obj
 
 
-def solver(problem, algorithm):
+def solver(problem, algorithm, params_set="default"):
     """
     Solve the optimization problem using the given algorithm
     and return the problem name, best state, best fitnees and fitness curve vs iterations
@@ -82,10 +83,20 @@ def solver(problem, algorithm):
     algorithm: (str)
     """
     # solve the problem using the given algorithm
-    best_state, best_fitnes, fitness_curve = ALGORITHM_MAPPING[algorithm](
-        problem,
-        random_state=RANDOM_SEED,
-        curve=True,
-        **ALGORITHM_HYPERPARAMS_MAPPING[algorithm],
-    )
+    if params_set == "default":
+        problem.reset()
+        best_state, best_fitnes, fitness_curve = ALGORITHM_MAPPING[algorithm](
+            problem,
+            random_state=RANDOM_SEED,
+            curve=True,
+            **ALGORITHM_HYPERPARAMS_DEFAULT_MAPPING[algorithm],
+        )
+    else:
+        problem.reset()
+        best_state, best_fitnes, fitness_curve = ALGORITHM_MAPPING[algorithm](
+            problem,
+            random_state=RANDOM_SEED,
+            curve=True,
+            **ALGORITHM_HYPERPARAMS_TUNED_MAPPING[algorithm],
+        )
     return best_state, best_fitnes, fitness_curve
