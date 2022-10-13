@@ -1,12 +1,10 @@
 import time
 
-from src.config.config import (
-    ALGORITHM_MAPPING,
-    PROBLEM_NAME_MAPPING,
-    PROBLEM_PARAMS_MAPPING,
-)
+from src.config.config import (ALGORITHM_MAPPING, PROBLEM_NAME_MAPPING,
+                               PROBLEM_PARAMS_MAPPING)
 from src.models.discrete_problems import solver
-from src.visualization.visualize import plot_fitness_curves, plot_walltime_chart
+from src.visualization.visualize import (plot_fitness_curves,
+                                         plot_walltime_chart)
 
 
 def discrete_problem_analysis(problem_name):
@@ -29,3 +27,12 @@ def discrete_problem_analysis(problem_name):
     # plot the fitness scores and the walltime bar chart and save to figures
     plot_fitness_curves(problem_name, fitness_score_map)
     plot_walltime_chart(problem_name, walltime_map)
+
+def neural_network_analysis():
+    """
+    Perform analysis and generate graphs for predicting NBA players career duration using neural network,
+    with the optimization algorithms subsituted with the 4 randomized optimization algorithms
+    """
+    walltime_map = {}
+    fitness_score_map = {}
+    
