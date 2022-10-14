@@ -1,26 +1,18 @@
 import time
+from collections import defaultdict
 
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from src.config.config import (
-    ALGORITHM_MAPPING,
-    NN_OPT_ALGORITHMS,
-    PROBLEM_PARAMS_MAPPING,
-    RANDOM_SEED,
-)
+from src.config.config import (ALGORITHM_MAPPING, NN_OPT_ALGORITHMS,
+                               PROBLEM_PARAMS_MAPPING, RANDOM_SEED)
 from src.data.nba_dataset import NBADataset
-from src.models.discrete_problems import (
-    knapsack_problem,
-    multi_queens_problem,
-    solver,
-    traveling_salesman_problem,
-)
-from src.models.neural_network import neural_network
-from src.visualization.visualize import (
-    plot_discrete_problem_fitness_curves,
-    plot_walltime_chart,
-)
+from src.models.discrete_problems import (knapsack_problem,
+                                          multi_queens_problem, solver,
+                                          traveling_salesman_problem)
+from src.models.neural_network import feature_transformer, neural_network
+from src.visualization.visualize import (plot_discrete_problem_fitness_curves,
+                                         plot_walltime_chart)
 
 
 def discrete_problem_analysis(problem_name):
@@ -64,7 +56,7 @@ def discrete_problem_analysis(problem_name):
     plt.savefig(f"./reports/figures/{problem_name}_fitness_curves.jpg", dpi=150)
 
     # plot the wall time the walltime bar chart
-    _, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+    _, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 6))
     plot_walltime_chart(walltime_map_default, ax1)
     plot_walltime_chart(walltime_map_tuned, ax2)
     plt.suptitle(f"Wall Time for Solving {problem_name}", fontsize=20)
@@ -80,15 +72,18 @@ def neural_network_analysis():
     """
     walltime_map = {}
     fitness_score_map = {}
-    accuracy_score_map = {}
+    accuracy_score_map = defaultdict(dict)
 
     # get training and test sets
     nba_dataset = NBADataset()
     X, y = nba_dataset.build_training_test_set()
-
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=RANDOM_SEED
     )
+    # preprocessing
+    features = feature_transformer()
+    X_train = features.fit_transform(X_train)
+    X_test = features.transform(X_test)
     # store fitness curves and wall times for the 4 algorithms
     for algorithm in NN_OPT_ALGORITHMS:
         start_time = time.perf_counter()
@@ -99,9 +94,16 @@ def neural_network_analysis():
         fitness_score_map[algorithm] = nn.fitness_curve
         walltime_map[algorithm] = end_time - start_time
         # get the accuracy score on test
-        y_pred = nn.predict(X_test)
-        accuracy_score_map[algorithm] = accuracy_score(y_test, y_pred)
+        y_pred_train = nn.predict(X_train)
+        y_pred_test = nn.predict(X_test)
+        accuracy_score_map[algorithm]["train"] = accuracy_score(y_train, y_pred_train)
+        accuracy_score_map[algorithm]["test"] = accuracy_score(y_test, y_pred_test)
+
+    breakpoint()
 
 
 if __name__ == "__main__":
     discrete_problem_analysis("Traveling Salesman Problem")
+    discrete_problem_analysis("Knapsack Problem")
+    discrete_problem_analysis("N-Queens Problem")
+    neural_network_analysis()

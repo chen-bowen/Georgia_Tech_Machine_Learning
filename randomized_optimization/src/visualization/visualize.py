@@ -10,7 +10,7 @@ def plot_discrete_problem_fitness_curves(fitness_score_map, axes):
 
     # plot fitness scores vs iterations for 4 different algorithms
     for i, (algorithm, fitness_vals) in enumerate(fitness_score_map.items()):
-        axes[i].plot(fitness_vals[:, 1], fitness_vals[:, 0])
+        axes[i].plot(fitness_vals[:, 0])
         axes[i].set_title(f"{algorithm}")
         axes[i].set_xlabel("Number of Iterations")
         axes[i].set_ylabel("Fitness")
@@ -54,7 +54,7 @@ def plot_walltime_chart(walltime_map, axes):
     # Create names on the axis and set title
     axes.set_xlabel("Algorithm")
     axes.set_ylabel("Wall Time (s)")
-    axes.xticks(rotation=45)
+    axes.tick_params(axis="x", rotation=45)
     axes.bar_label(bars, padding=0.5)
 
     return plt
