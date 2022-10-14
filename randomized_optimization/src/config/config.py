@@ -12,19 +12,19 @@ ALGORITHM_HYPERPARAMS_DEFAULT_MAPPING = {  # type: ignore
         schedule=mlrose.ExpDecay(exp_const=0.005), max_attempts=500, max_iters=1000
     ),
     "Genetic Algorithm": dict(
-        pop_size=500, mutation_prob=0.2, max_attempts=500, max_iters=1000
+        pop_size=500, mutation_prob=0.2, max_attempts=700, max_iters=700
     ),
-    "Mimic": dict(pop_size=500, keep_pct=0.2, max_attempts=500, max_iters=1000),
+    "Mimic": dict(pop_size=500, keep_pct=0.2, max_attempts=700, max_iters=700),
 }
 ALGORITHM_HYPERPARAMS_TUNED_MAPPING = {  # type: ignore
-    "Random Hill Climb": dict(restarts=10, max_attempts=500, max_iters=1000),
+    "Random Hill Climb": dict(restarts=10, max_attempts=700, max_iters=700),
     "Simulated Annealing": dict(
-        schedule=mlrose.ExpDecay(exp_const=0.05), max_attempts=500, max_iters=1000
+        schedule=mlrose.ExpDecay(exp_const=0.05), max_attempts=700, max_iters=700
     ),
     "Genetic Algorithm": dict(
-        pop_size=500, mutation_prob=0.5, max_attempts=500, max_iters=1000
+        pop_size=500, mutation_prob=0.5, max_attempts=700, max_iters=700
     ),
-    "Mimic": dict(pop_size=500, keep_pct=0.5, max_attempts=500, max_iters=1000),
+    "Mimic": dict(pop_size=500, keep_pct=0.5, max_attempts=700, max_iters=700),
 }
 
 PROBLEM_PARAMS_MAPPING = {

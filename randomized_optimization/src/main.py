@@ -1,18 +1,26 @@
 import time
-from collections import defaultdict
 
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from src.config.config import (ALGORITHM_MAPPING, NN_OPT_ALGORITHMS,
-                               PROBLEM_PARAMS_MAPPING, RANDOM_SEED)
+from src.config.config import (
+    ALGORITHM_MAPPING,
+    NN_OPT_ALGORITHMS,
+    PROBLEM_PARAMS_MAPPING,
+    RANDOM_SEED,
+)
 from src.data.nba_dataset import NBADataset
-from src.models.discrete_problems import (knapsack_problem,
-                                          multi_queens_problem, solver,
-                                          traveling_salesman_problem)
+from src.models.discrete_problems import (
+    knapsack_problem,
+    multi_queens_problem,
+    solver,
+    traveling_salesman_problem,
+)
 from src.models.neural_network import feature_transformer, neural_network
-from src.visualization.visualize import (plot_discrete_problem_fitness_curves,
-                                         plot_walltime_chart)
+from src.visualization.visualize import (
+    plot_discrete_problem_fitness_curves,
+    plot_walltime_chart,
+)
 
 
 def discrete_problem_analysis(problem_name):
@@ -72,7 +80,8 @@ def neural_network_analysis():
     """
     walltime_map = {}
     fitness_score_map = {}
-    accuracy_score_map = defaultdict(dict)
+    train_accuracy_score_map = {}
+    test_accuracy_score_map = {}
 
     # get training and test sets
     nba_dataset = NBADataset()
@@ -96,8 +105,8 @@ def neural_network_analysis():
         # get the accuracy score on test
         y_pred_train = nn.predict(X_train)
         y_pred_test = nn.predict(X_test)
-        accuracy_score_map[algorithm]["train"] = accuracy_score(y_train, y_pred_train)
-        accuracy_score_map[algorithm]["test"] = accuracy_score(y_test, y_pred_test)
+        train_accuracy_score_map[algorithm] = accuracy_score(y_train, y_pred_train)
+        test_accuracy_score_map[algorithm] = accuracy_score(y_test, y_pred_test)
 
     breakpoint()
 
