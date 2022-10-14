@@ -1,11 +1,6 @@
 import mlrose_hiive as mlrose
 import numpy as np
-from src.config.config import (
-    ALGORITHM_HYPERPARAMS_DEFAULT_MAPPING,
-    ALGORITHM_HYPERPARAMS_TUNED_MAPPING,
-    ALGORITHM_MAPPING,
-    RANDOM_SEED,
-)
+from src.config.config import ALGORITHM_MAPPING, RANDOM_SEED
 
 
 def traveling_salesman_problem(number_of_cities=20):
@@ -50,16 +45,14 @@ def multi_queens_problem(number_of_queens=10):
     return problem_obj
 
 
-def knapsack_problem(
-    number_of_items_types=10,
-    max_item_count=5,
-    max_weight_per_item=25,
-    max_value_per_item=10,
-    max_weight_pct=0.7,
-):
+def knapsack_problem(max_item_count=5):
     """
     Generate a knapsack problem given the parameters
     """
+    number_of_items_types = 10
+    max_weight_per_item = 25
+    max_value_per_item = 10
+    max_weight_pct = 0.7
     # get the knapsack problem
     weights = 1 + np.random.randint(max_weight_per_item, size=number_of_items_types)
     values = 1 + np.random.randint(max_value_per_item, size=number_of_items_types)
@@ -74,7 +67,7 @@ def knapsack_problem(
     return problem_obj
 
 
-def solver(problem, algorithm, params_set="default"):
+def solver(problem, algorithm, params_set):
     """
     Solve the optimization problem using the given algorithm
     and return the problem name, best state, best fitnees and fitness curve vs iterations
@@ -83,20 +76,14 @@ def solver(problem, algorithm, params_set="default"):
     algorithm: (str)
     """
     # solve the problem using the given algorithm
-    if params_set == "default":
-        problem.reset()
-        best_state, best_fitnes, fitness_curve = ALGORITHM_MAPPING[algorithm](
-            problem,
-            random_state=RANDOM_SEED,
-            curve=True,
-            **ALGORITHM_HYPERPARAMS_DEFAULT_MAPPING[algorithm],
-        )
-    else:
-        problem.reset()
-        best_state, best_fitnes, fitness_curve = ALGORITHM_MAPPING[algorithm](
-            problem,
-            random_state=RANDOM_SEED,
-            curve=True,
-            **ALGORITHM_HYPERPARAMS_TUNED_MAPPING[algorithm],
-        )
+    problem.reset()
+    best_state, best_fitnes, fitness_curve = ALGORITHM_MAPPING[algorithm](
+        problem,
+        random_state=RANDOM_SEED,
+        curve=True,
+        max_iters=700,
+        max_attempts=700,
+        **params_set,
+    )
+
     return best_state, best_fitnes, fitness_curve

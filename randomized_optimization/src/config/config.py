@@ -1,4 +1,5 @@
 import mlrose_hiive as mlrose
+import numpy as np
 
 ALGORITHM_MAPPING = {
     "Random Hill Climb": mlrose.random_hill_climb,
@@ -6,36 +7,19 @@ ALGORITHM_MAPPING = {
     "Genetic Algorithm": mlrose.genetic_alg,
     "Mimic": mlrose.mimic,
 }
-ALGORITHM_HYPERPARAMS_DEFAULT_MAPPING = {  # type: ignore
-    "Random Hill Climb": dict(restarts=3, max_attempts=500, max_iters=1000),
-    "Simulated Annealing": dict(
-        schedule=mlrose.ExpDecay(exp_const=0.005), max_attempts=500, max_iters=1000
-    ),
-    "Genetic Algorithm": dict(
-        pop_size=500, mutation_prob=0.2, max_attempts=700, max_iters=700
-    ),
-    "Mimic": dict(pop_size=500, keep_pct=0.2, max_attempts=700, max_iters=700),
-}
-ALGORITHM_HYPERPARAMS_TUNED_MAPPING = {  # type: ignore
-    "Random Hill Climb": dict(restarts=10, max_attempts=700, max_iters=700),
-    "Simulated Annealing": dict(
-        schedule=mlrose.ExpDecay(exp_const=0.05), max_attempts=700, max_iters=700
-    ),
-    "Genetic Algorithm": dict(
-        pop_size=500, mutation_prob=0.5, max_attempts=700, max_iters=700
-    ),
-    "Mimic": dict(pop_size=500, keep_pct=0.5, max_attempts=700, max_iters=700),
+ALGORITHM_HYPERPARAMS_MAPPING = {  # type: ignore
+    "Random Hill Climb": [dict(restarts=i) for i in np.arange(1, 11, 3)],
+    "Simulated Annealing": [
+        dict(schedule=mlrose.ExpDecay(exp_const=i))
+        for i in [0.0005, 0.001, 0.005, 0.01]
+    ],
+    "Genetic Algorithm": [dict(pop_size=500, mutation_prob=i) for i in [0.2, 0.5, 0.8]],
+    "Mimic": [dict(pop_size=500, keep_pct=i) for i in [0.2, 0.5, 0.8]],
 }
 
 PROBLEM_PARAMS_MAPPING = {
     "Traveling Salesman Problem": dict(number_of_cities=20),
-    "Knapsack Problem": dict(
-        number_of_items_types=10,
-        max_item_count=5,
-        max_weight_per_item=25,
-        max_value_per_item=10,
-        max_weight_pct=0.7,
-    ),
+    "Knapsack Problem": dict(max_item_count=5),
     "N-Queens Problem": dict(number_of_queens=10),
 }
 RANDOM_SEED = 7

@@ -1,9 +1,12 @@
 import time
+from collections import defaultdict
 
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from src.config.config import (
+    ALGORITHM_HYPERPARAMS_MAPPING,
     ALGORITHM_MAPPING,
     NN_OPT_ALGORITHMS,
     PROBLEM_PARAMS_MAPPING,
@@ -19,7 +22,10 @@ from src.models.discrete_problems import (
 from src.models.neural_network import feature_transformer, neural_network
 from src.visualization.visualize import (
     plot_discrete_problem_fitness_curves,
-    plot_walltime_chart,
+    plot_discrete_problem_scalability,
+    plot_neural_network_accuracy_chart,
+    plot_neural_network_fitness_curve,
+    plot_neural_network_walltime_chart,
 )
 
 
@@ -32,43 +38,41 @@ def discrete_problem_analysis(problem_name):
     }
     # define a traveling salesman problem with 20 cities
     problem = PROBLEM_NAME_MAPPING[problem_name](**PROBLEM_PARAMS_MAPPING[problem_name])
-    walltime_map_default = {}
-    fitness_score_map_default = {}
-    walltime_map_tuned = {}
-    fitness_curve_map_tuned = {}
+    walltime_map = defaultdict(list)
+    fitness_score_map = defaultdict(dict)
 
     # store fitness curves and wall times for the 4 algorithms
     for algorithm in ALGORITHM_MAPPING:
-        # run the solver and get the fitness scores for default parameters set
-        start_time = time.perf_counter()
-        _, _, fitness_curve = solver(problem, algorithm, params_set="default")
-        end_time = time.perf_counter()
-        # store fitness curve and wall times
-        fitness_score_map_default[algorithm] = fitness_curve
-        walltime_map_default[algorithm] = end_time - start_time
+        for params_set in ALGORITHM_HYPERPARAMS_MAPPING[algorithm]:
+            # run the solver and get the fitness scores for default parameters set
+            _, _, fitness_curve = solver(problem, algorithm, params_set)
+            # store fitness curve and wall times
+            fitness_score_map[algorithm][str(params_set)] = fitness_curve
 
-        # run the solver and get the fitness scores for default parameters set
-        start_time = time.perf_counter()
-        _, _, fitness_curve = solver(problem, algorithm, params_set="tuned")
-        end_time = time.perf_counter()
-        # store fitness curve and wall times
-        fitness_curve_map_tuned[algorithm] = fitness_curve
-        walltime_map_tuned[algorithm] = end_time - start_time
+        for problem_size in np.arange(5, 51, 5):
+            # start counter and get the wall times for algorithm
+            start_time = time.perf_counter()
+            problem = PROBLEM_NAME_MAPPING[problem_name](problem_size)
+            _, _, _ = solver(
+                problem,
+                algorithm,
+                params_set=ALGORITHM_HYPERPARAMS_MAPPING[algorithm][1],
+            )
+            end_time = time.perf_counter()
+            walltime_map[algorithm].append(end_time - start_time)
 
     # plot the fitness scores
-    _, axes = plt.subplots(4, 2, figsize=(10, 20))
-    plot_discrete_problem_fitness_curves(fitness_score_map_default, axes[:, 0])  # type: ignore
-    plot_discrete_problem_fitness_curves(fitness_curve_map_tuned, axes[:, 1])  # type: ignore
+    _, axes = plt.subplots(2, 2, figsize=(20, 20))
+    plot_discrete_problem_fitness_curves(fitness_score_map, axes)  # type: ignore
     plt.suptitle(f"Fitness Curves for Solving {problem_name}", fontsize=20)
     plt.tight_layout(rect=[0, 0.01, 1, 0.99])
     plt.savefig(f"./reports/figures/{problem_name}_fitness_curves.jpg", dpi=150)
 
     # plot the wall time the walltime bar chart
-    _, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 6))
-    plot_walltime_chart(walltime_map_default, ax1)
-    plot_walltime_chart(walltime_map_tuned, ax2)
-    plt.suptitle(f"Wall Time for Solving {problem_name}", fontsize=20)
-    plt.tight_layout(rect=[0, 0.01, 1, 0.99])
+    plt.clf()
+    plt.figure(figsize=(10, 7))
+    plot_discrete_problem_scalability(walltime_map)
+    plt.title(f"Scalability for Solving {problem_name}")
     plt.savefig(f"./reports/figures/{problem_name}_wall_times.jpg", dpi=150)
 
 
@@ -108,7 +112,17 @@ def neural_network_analysis():
         train_accuracy_score_map[algorithm] = accuracy_score(y_train, y_pred_train)
         test_accuracy_score_map[algorithm] = accuracy_score(y_test, y_pred_test)
 
-    breakpoint()
+    _, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(20, 10))
+    plot_neural_network_fitness_curve(fitness_score_map, ax1)
+    plot_neural_network_walltime_chart(walltime_map, ax2)
+    plot_neural_network_accuracy_chart(
+        train_accuracy_score_map, test_accuracy_score_map, ax3
+    )
+    plt.suptitle(
+        "Neural Network Fitted With Random Optimization vs Gradient Descent",
+        fontsize=20,
+    )
+    plt.savefig("./reports/figures/neural_network_curves.jpg", dpi=150)
 
 
 if __name__ == "__main__":
