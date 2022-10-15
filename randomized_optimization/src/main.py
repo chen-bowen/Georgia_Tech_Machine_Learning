@@ -112,12 +112,13 @@ def neural_network_analysis():
         train_accuracy_score_map[algorithm] = accuracy_score(y_train, y_pred_train)
         test_accuracy_score_map[algorithm] = accuracy_score(y_test, y_pred_test)
 
-    _, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(20, 10))
+    _, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 25))
     plot_neural_network_fitness_curve(fitness_score_map, ax1)
     plot_neural_network_walltime_chart(walltime_map, ax2)
     plot_neural_network_accuracy_chart(
         train_accuracy_score_map, test_accuracy_score_map, ax3
     )
+    plt.tight_layout(rect=[0, 0.01, 1, 0.90])
     plt.suptitle(
         "Neural Network Fitted With Random Optimization vs Gradient Descent",
         fontsize=20,
@@ -126,7 +127,7 @@ def neural_network_analysis():
 
 
 if __name__ == "__main__":
-    discrete_problem_analysis("Traveling Salesman Problem")
+    # discrete_problem_analysis("Traveling Salesman Problem")
     discrete_problem_analysis("Knapsack Problem")
-    discrete_problem_analysis("N-Queens Problem")
+    # discrete_problem_analysis("N-Queens Problem")
     neural_network_analysis()
