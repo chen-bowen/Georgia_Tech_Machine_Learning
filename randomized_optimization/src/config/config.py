@@ -13,8 +13,8 @@ ALGORITHM_HYPERPARAMS_MAPPING = {  # type: ignore
         dict(schedule=mlrose.ExpDecay(exp_const=i))
         for i in [0.0005, 0.001, 0.005, 0.01]
     ],
-    "Genetic Algorithm": [dict(mutation_prob=i) for i in [0.2, 0.5, 0.8]],
-    "Mimic": [dict(keep_pct=i) for i in [0.2, 0.5, 0.8]],
+    "Genetic Algorithm": [dict(mutation_prob=i) for i in [0.05, 0.2, 0.5, 0.8]],
+    "Mimic": [dict(keep_pct=i) for i in [0.05, 0.2, 0.5, 0.8]],
 }
 
 PROBLEM_PARAMS_MAPPING = {
@@ -72,16 +72,5 @@ NN_DEFAULT_PARAMS = dict(
     learning_rate=0.0001,
     early_stopping=True,
     clip_max=5,
-    max_attempts=100,
+    max_attempts=1000,
 )
-NN_TUNED_PARAMS = dict(
-    hidden_nodes=[32, 16],
-    activation="relu",
-    max_iters=1000,
-    bias=True,
-    is_classifier=True,
-    learning_rate=0.0001,
-    early_stopping=True,
-    clip_max=5,
-    max_attempts=100,
-)  # type: ignore

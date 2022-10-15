@@ -58,7 +58,7 @@ def discrete_problem_analysis(problem_name):
             _, _, _ = solver(
                 problem,
                 algorithm,
-                params_set=ALGORITHM_HYPERPARAMS_MAPPING[algorithm][1],
+                params_set=ALGORITHM_HYPERPARAMS_MAPPING[algorithm][2],
             )
             end_time = time.perf_counter()
             walltime_map[algorithm].append(end_time - start_time)
@@ -79,7 +79,7 @@ def discrete_problem_analysis(problem_name):
     _, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
     plot_discrete_problem_scalability(walltime_map, ax1)
     plot_discrete_problem_evals_per_iter_chart(evals_per_iter_map, ax2)
-    plt.title(f"Scalability for Solving {problem_name}")
+    plt.suptitle(f"Scalability for Solving {problem_name}")
     plt.savefig(f"./reports/figures/{problem_name}_scalability.jpg", dpi=150)
 
 
