@@ -1,5 +1,4 @@
 import mlrose_hiive as mlrose
-import numpy as np
 from src.config.config import ALGORITHM_MAPPING, RANDOM_SEED
 
 
@@ -45,25 +44,11 @@ def multi_queens_problem(number_of_queens=10):
     return problem_obj
 
 
-def knapsack_problem(max_item_count=5):
+def knapsack_problem(max_item_count=10):
     """
     Generate a knapsack problem given the parameters
     """
-    number_of_items_types = 10
-    max_weight_per_item = 25
-    max_value_per_item = 10
-    max_weight_pct = 0.7
-    # get the knapsack problem
-    weights = 1 + np.random.randint(max_weight_per_item, size=number_of_items_types)
-    values = 1 + np.random.randint(max_value_per_item, size=number_of_items_types)
-    problem_obj = mlrose.KnapsackOpt(
-        length=number_of_items_types,
-        maximize=True,
-        max_val=max_item_count,
-        weights=weights,
-        values=values,
-        max_weight_pct=max_weight_pct,
-    )
+    problem_obj = mlrose.KnapsackGenerator().generate(RANDOM_SEED, max_item_count)
     return problem_obj
 
 

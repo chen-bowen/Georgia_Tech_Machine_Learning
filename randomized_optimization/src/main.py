@@ -21,6 +21,7 @@ from src.models.discrete_problems import (
 )
 from src.models.neural_network import feature_transformer, neural_network
 from src.visualization.visualize import (
+    plot_discrete_problem_evals_per_iter_chart,
     plot_discrete_problem_fitness_curves,
     plot_discrete_problem_scalability,
     plot_neural_network_accuracy_chart,
@@ -40,6 +41,7 @@ def discrete_problem_analysis(problem_name):
     problem = PROBLEM_NAME_MAPPING[problem_name](**PROBLEM_PARAMS_MAPPING[problem_name])
     walltime_map = defaultdict(list)
     fitness_score_map = defaultdict(dict)
+    evals_per_iter_map = defaultdict()
 
     # store fitness curves and wall times for the 4 algorithms
     for algorithm in ALGORITHM_MAPPING:
@@ -61,6 +63,11 @@ def discrete_problem_analysis(problem_name):
             end_time = time.perf_counter()
             walltime_map[algorithm].append(end_time - start_time)
 
+        # get evals per iteration
+        evals_per_iter_map[algorithm] = round(
+            fitness_curve[-1, 1] / len(fitness_curve[:, 1])
+        )
+
     # plot the fitness scores
     _, axes = plt.subplots(2, 2, figsize=(20, 20))
     plot_discrete_problem_fitness_curves(fitness_score_map, axes)  # type: ignore
@@ -69,11 +76,11 @@ def discrete_problem_analysis(problem_name):
     plt.savefig(f"./reports/figures/{problem_name}_fitness_curves.jpg", dpi=150)
 
     # plot the wall time the walltime bar chart
-    plt.clf()
-    plt.figure(figsize=(10, 7))
-    plot_discrete_problem_scalability(walltime_map)
+    _, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
+    plot_discrete_problem_scalability(walltime_map, ax1)
+    plot_discrete_problem_evals_per_iter_chart(evals_per_iter_map, ax2)
     plt.title(f"Scalability for Solving {problem_name}")
-    plt.savefig(f"./reports/figures/{problem_name}_wall_times.jpg", dpi=150)
+    plt.savefig(f"./reports/figures/{problem_name}_scalability.jpg", dpi=150)
 
 
 def neural_network_analysis():
@@ -112,13 +119,13 @@ def neural_network_analysis():
         train_accuracy_score_map[algorithm] = accuracy_score(y_train, y_pred_train)
         test_accuracy_score_map[algorithm] = accuracy_score(y_test, y_pred_test)
 
-    _, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 25))
+    _, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 22))
     plot_neural_network_fitness_curve(fitness_score_map, ax1)
     plot_neural_network_walltime_chart(walltime_map, ax2)
     plot_neural_network_accuracy_chart(
         train_accuracy_score_map, test_accuracy_score_map, ax3
     )
-    plt.tight_layout(rect=[0, 0.01, 1, 0.90])
+    plt.tight_layout(rect=[0, 0.01, 1, 0.95])
     plt.suptitle(
         "Neural Network Fitted With Random Optimization vs Gradient Descent",
         fontsize=20,
@@ -127,7 +134,7 @@ def neural_network_analysis():
 
 
 if __name__ == "__main__":
-    # discrete_problem_analysis("Traveling Salesman Problem")
+    discrete_problem_analysis("Traveling Salesman Problem")
     discrete_problem_analysis("Knapsack Problem")
-    # discrete_problem_analysis("N-Queens Problem")
+    discrete_problem_analysis("N-Queens Problem")
     neural_network_analysis()

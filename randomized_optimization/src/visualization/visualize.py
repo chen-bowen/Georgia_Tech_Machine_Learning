@@ -28,15 +28,35 @@ def plot_discrete_problem_fitness_curves(fitness_score_map, axes):
     return axes
 
 
-def plot_discrete_problem_scalability(size_walltimes_map):
+def plot_discrete_problem_scalability(size_walltimes_map, axes):
     """
     Plot problem size vs wall time curve
     """
     for algorithm, size_walltime in size_walltimes_map.items():
-        plt.plot(np.arange(5, 51, 5), size_walltime, label=f"{algorithm}")
-    plt.xlabel("Problem Size (n)")
-    plt.ylabel("Wall Time (s)")
-    plt.legend()
+        axes.plot(np.arange(5, 51, 5), size_walltime, label=f"{algorithm}")
+    axes.set_xlabel("Problem Size (n)")
+    axes.set_ylabel("Wall Time (s)")
+    axes.legend()
+    return plt
+
+
+def plot_discrete_problem_evals_per_iter_chart(evals_per_iter_map, axes):
+    """
+    Plot number of evaluations per iteration
+    """
+    algorithms = list(evals_per_iter_map.keys())
+    num_evals = list(evals_per_iter_map.values())
+
+    # Create bars
+    bars = axes.bar(algorithms, num_evals)
+
+    # Create names on the axis and set title
+    axes.set_xlabel("Algorithm")
+    axes.set_ylabel("Evaluations per Iteration")
+    axes.tick_params(axis="x", rotation=30)
+    axes.bar_label(bars, padding=0.5)
+    axes.set_title("Number of Evaluations per Iteration")
+
     return plt
 
 
@@ -107,5 +127,6 @@ def plot_neural_network_accuracy_chart(
     axes.bar_label(bars1, padding=0.5)
     axes.bar_label(bars2, padding=0.5)
     axes.set_title("Accuracy of Train and Test")
+    axes.legend()
 
     return plt

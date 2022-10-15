@@ -20,7 +20,6 @@ def neural_network(X_train, y_train, algorithm):
     """
     Constructs the career duration model pipeline that switches between different models
     """
-
     # fit the network
     nn_model1 = mlrose.NeuralNetwork(
         algorithm=algorithm, random_state=RANDOM_SEED, curve=True, **NN_DEFAULT_PARAMS

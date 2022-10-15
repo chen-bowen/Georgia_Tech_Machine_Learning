@@ -13,13 +13,13 @@ ALGORITHM_HYPERPARAMS_MAPPING = {  # type: ignore
         dict(schedule=mlrose.ExpDecay(exp_const=i))
         for i in [0.0005, 0.001, 0.005, 0.01]
     ],
-    "Genetic Algorithm": [dict(pop_size=500, mutation_prob=i) for i in [0.2, 0.5, 0.8]],
-    "Mimic": [dict(pop_size=500, keep_pct=i) for i in [0.2, 0.5, 0.8]],
+    "Genetic Algorithm": [dict(mutation_prob=i) for i in [0.2, 0.5, 0.8]],
+    "Mimic": [dict(keep_pct=i) for i in [0.2, 0.5, 0.8]],
 }
 
 PROBLEM_PARAMS_MAPPING = {
     "Traveling Salesman Problem": dict(number_of_cities=20),
-    "Knapsack Problem": dict(max_item_count=5),
+    "Knapsack Problem": dict(max_item_count=10),
     "N-Queens Problem": dict(number_of_queens=10),
 }
 RANDOM_SEED = 7
