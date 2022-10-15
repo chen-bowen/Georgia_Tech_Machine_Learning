@@ -68,18 +68,18 @@ def discrete_problem_analysis(problem_name):
             fitness_curve[-1, 1] / len(fitness_curve[:, 1])
         )
 
-    # plot the fitness scores
+    # plot the fitness scores with different hyperparameters
     _, axes = plt.subplots(2, 2, figsize=(20, 20))
     plot_discrete_problem_fitness_curves(fitness_score_map, axes)  # type: ignore
     plt.suptitle(f"Fitness Curves for Solving {problem_name}", fontsize=20)
     plt.tight_layout(rect=[0, 0.01, 1, 0.99])
     plt.savefig(f"./reports/figures/{problem_name}_fitness_curves.jpg", dpi=150)
 
-    # plot the wall time the walltime bar chart
+    # plot the scalability charts
     _, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
     plot_discrete_problem_scalability(walltime_map, ax1)
     plot_discrete_problem_evals_per_iter_chart(evals_per_iter_map, ax2)
-    plt.suptitle(f"Scalability for Solving {problem_name}")
+    plt.suptitle(f"Scalability for Solving {problem_name}", fontsize=20)
     plt.savefig(f"./reports/figures/{problem_name}_scalability.jpg", dpi=150)
 
 

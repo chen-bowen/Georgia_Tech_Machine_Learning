@@ -53,7 +53,7 @@ def plot_discrete_problem_evals_per_iter_chart(evals_per_iter_map, axes):
     # Create names on the axis and set title
     axes.set_xlabel("Algorithm")
     axes.set_ylabel("Evaluations per Iteration")
-    axes.tick_params(axis="x", rotation=30)
+    axes.tick_params(axis="x", rotation=25)
     axes.bar_label(bars, padding=0.5)
     axes.set_title("Number of Evaluations per Iteration")
 
@@ -92,7 +92,7 @@ def plot_neural_network_walltime_chart(walltime_map, axes):
     # Create names on the axis and set title
     axes.set_xlabel("Algorithm")
     axes.set_ylabel("Wall Time (s)")
-    axes.tick_params(axis="x", rotation=30)
+    axes.tick_params(axis="x", rotation=25)
     axes.bar_label(bars, padding=0.5)
     axes.set_title("Wall Time")
 
@@ -123,7 +123,7 @@ def plot_neural_network_accuracy_chart(
     plt.xticks(X_axis, algorithms)
     axes.set_xlabel("Algorithm")
     axes.set_ylabel("Accuracy")
-    axes.tick_params(axis="x", rotation=30)
+    axes.tick_params(axis="x", rotation=25)
     axes.bar_label(bars1, padding=0.5)
     axes.bar_label(bars2, padding=0.5)
     axes.set_title("Accuracy of Train and Test")
