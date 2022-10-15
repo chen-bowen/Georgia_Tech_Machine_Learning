@@ -37,6 +37,7 @@ def plot_discrete_problem_scalability(size_walltimes_map, axes):
     axes.set_xlabel("Problem Size (n)")
     axes.set_ylabel("Wall Time (s)")
     axes.legend()
+    axes.set_title("Wall Time vs Problem Size")
     return plt
 
 
