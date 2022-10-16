@@ -5,27 +5,6 @@ from src.config.config import ALGORITHM_MAPPING, RANDOM_SEED
 def traveling_salesman_problem(number_of_cities=20):
     """
     Generate a traveling salesmane problem given the number of cities
-    With the traveling salesman problem generator, the coordinates of the cities are
-        [(175, 68),
-        (196, 176),
-        (25, 127),
-        (246, 135),
-        (67, 172),
-        (211, 0),
-        (151, 75),
-        (103, 55),
-        (92, 6),
-        (185, 19),
-        (142, 188),
-        (23, 44),
-        (72, 191),
-        (89, 69),
-        (110, 56),
-        (42, 152),
-        (218, 183),
-        (136, 181),
-        (167, 112),
-        (230, 189)]
     """
     # define problem and objects
     problem_obj = mlrose.TSPGenerator().generate(RANDOM_SEED, number_of_cities)
@@ -35,8 +14,6 @@ def traveling_salesman_problem(number_of_cities=20):
 def multi_queens_problem(number_of_queens=10):
     """
     generate an n queens problem given the number of queens
-    With the n-queens problem generator, the row positions of each queen initially are
-    [9, 6, 7, 3, 4, 3, 7, 9, 7, 8]
     """
     # define problem and objects
     problem_obj = mlrose.QueensGenerator().generate(RANDOM_SEED, number_of_queens)
