@@ -15,7 +15,7 @@ from src.config.config import (
 from src.data.nba_dataset import NBADataset
 from src.models.discrete_problems import (
     knapsack_problem,
-    multi_queens_problem,
+    n_queens_problem,
     solver,
     traveling_salesman_problem,
 )
@@ -35,7 +35,7 @@ def discrete_problem_analysis(problem_name):
     PROBLEM_NAME_MAPPING = {
         "Traveling Salesman Problem": traveling_salesman_problem,
         "Knapsack Problem": knapsack_problem,
-        "N-Queens Problem": multi_queens_problem,
+        "N-Queens Problem": n_queens_problem,
     }
     # define a traveling salesman problem with 20 cities
     problem = PROBLEM_NAME_MAPPING[problem_name](**PROBLEM_PARAMS_MAPPING[problem_name])

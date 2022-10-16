@@ -11,7 +11,7 @@ def traveling_salesman_problem(number_of_cities=20):
     return problem_obj
 
 
-def multi_queens_problem(number_of_queens=10):
+def n_queens_problem(number_of_queens=10):
     """
     generate an n queens problem given the number of queens
     """
