@@ -63,14 +63,18 @@ NN_OPT_ALGORITHMS = [
     "genetic_alg",
     "gradient_descent",
 ]
+NN_LEARNING_RATE_MAP = {
+    "random_hill_climb": 0.1,
+    "simulated_annealing": 0.1,
+    "genetic_alg": 0.001,
+    "gradient_descent": 0.0001,
+}
 NN_DEFAULT_PARAMS = dict(
     hidden_nodes=[32],
     activation="relu",
     max_iters=1000,
     bias=True,
     is_classifier=True,
-    learning_rate=0.0001,
-    early_stopping=True,
     clip_max=5,
     max_attempts=1000,
 )
