@@ -1,8 +1,12 @@
 import re
+import warnings
 
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from sklearn.base import BaseEstimator
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.pipeline import Pipeline
 
 
 class TweetPreprocessor(BaseEstimator):
@@ -57,3 +61,21 @@ class TweetPreprocessor(BaseEstimator):
         X = self.remove_stop_words(X)
         X = self.stem_tweets(X)
         return X[self.tweets_col].values.tolist()
+
+
+warnings.filterwarnings("ignore", category=ConvergenceWarning, module="sklearn")
+
+
+def preprocess_tweets(X):
+    """
+    Constructs the tweet data preprocessing pipeline
+    """
+    pipeline = Pipeline(
+        [
+            ("tweet_preprocessor", TweetPreprocessor("tweet_content")),
+            ("vec", CountVectorizer()),
+            ("tfidf", TfidfTransformer()),
+        ]
+    )
+    X = pipeline.fit(X)
+    return X

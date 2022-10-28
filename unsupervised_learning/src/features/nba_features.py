@@ -1,5 +1,7 @@
 import pandas as pd
 from sklearn.base import BaseEstimator
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 from src.config.config import ALL_POSITIONS, ALL_TEAMS
 
 # from sklearn.preprocessing import LabelBinarizer
@@ -62,3 +64,18 @@ class PlayerPositionEncoder(BaseEstimator):
             pd.get_dummies(X[self.position_variable])
         )
         return X
+
+
+def preprocess_nba_players_data(X):
+    """
+    Constructs the nba data preprocessing pipeline
+    """
+    pipeline = Pipeline(
+        [
+            ("player_position", PlayerPositionEncoder("pos")),
+            ("team", TeamsEncoder("tm")),
+            ("scaler", StandardScaler()),
+        ]
+    )
+    X = pipeline.fit(X)
+    return X

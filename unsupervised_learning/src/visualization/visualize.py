@@ -1,190 +1,42 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.model_selection import learning_curve
-from src.config.config import MODEL_MAPPING
 
 
-def plot_learning_curve(
-    model_name,
-    params_value,
-    estimator,
-    X,
-    y,
-    axes=None,
-    ylim=None,
-    cv=None,
-    n_jobs=None,
-    scoring=None,
-    train_sizes=np.linspace(0.1, 1.0, 10),
-):
+def pca_variance_plot(pca):
     """
-    Referenced from:
-    https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.learning_curve.html#sklearn.model_selection.learning_curve
+    Creates a variance plot associated with the principal components
 
-    Generate 3 plots: the test and training learning curve, the training
-    samples vs fit times curve, the fit times vs score curve.
+    INPUT: pca - the result of instantian of PCA object in scikit learn
 
-    Parameters
-    ----------
-    model_name: the name of the model (used for saving figures)
-    dataset_name: NBA or Twitter
-    params_type: Default or Optimal
-    estimator : estimator instance
-        An estimator instance implementing `fit` and `predict` methods which
-        will be cloned for each validation.
-
-    title : str
-        Title for the chart.
-
-    X : array-like of shape (n_samples, n_features)
-        Training vector, where ``n_samples`` is the number of samples and
-        ``n_features`` is the number of features.
-
-    y : array-like of shape (n_samples) or (n_samples, n_features)
-        Target relative to ``X`` for classification or regression;
-        None for unsupervised learning.
-
-    axes : array-like of shape (3,), default=None
-        Axes to use for plotting the curves.
-
-    ylim : tuple of shape (2,), default=None
-        Defines minimum and maximum y-values plotted, e.g. (ymin, ymax).
-
-    cv : int, cross-validation generator or an iterable, default=None
-        Determines the cross-validation splitting strategy.
-        Possible inputs for cv are:
-
-          - None, to use the default 5-fold cross-validation,
-          - integer, to specify the number of folds.
-          - :term:`CV splitter`,
-          - An iterable yielding (train, test) splits as arrays of indices.
-
-        For integer/None inputs, if ``y`` is binary or multiclass,
-        :class:`StratifiedKFold` used. If the estimator is not a classifier
-        or if ``y`` is neither binary nor multiclass, :class:`KFold` is used.
-
-        Refer :ref:`User Guide <cross_validation>` for the various
-        cross-validators that can be used here.
-
-    n_jobs : int or None, default=None
-        Number of jobs to run in parallel.
-        ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
-        ``-1`` means using all processors. See :term:`Glossary <n_jobs>`
-        for more details.
-
-    scoring : str or callable, default=None
-        A str (see model evaluation documentation) or
-        a scorer callable object / function with signature
-        ``scorer(estimator, X, y)``.
-
-    train_sizes : array-like of shape (n_ticks,)
-        Relative or absolute numbers of training examples that will be used to
-        generate the learning curve. If the ``dtype`` is float, it is regarded
-        as a fraction of the maximum size of the training set (that is
-        determined by the selected validation method), i.e. it has to be within
-        (0, 1]. Otherwise it is interpreted as absolute sizes of the training
-        sets. Note that for classification the number of samples usually have
-        to be big enough to contain at least one sample from each class.
-        (default: np.linspace(0.1, 1.0, 5))
+    OUTPUT: number of components suggested
     """
-    if axes is None:
-        _, axes = plt.subplots(1, 4, figsize=(24, 5))
+    num_components = len(pca.explained_variance_ratio_)
+    ind = np.arange(num_components)
+    vals = pca.explained_variance_ratio_
 
-    axes[0].set_title(
-        f"""
-        Learning Curve
-         {MODEL_MAPPING[model_name]['actual_params_name']} = {params_value}
-        """
-    )
-    if ylim is not None:
-        axes[0].set_ylim(*ylim)
-    axes[0].set_xlabel("Training Instances")
-    axes[0].set_ylabel("Accuracy")
+    plt.figure(figsize=(15, 8))
+    ax = plt.subplot(111)
+    cumvals = np.cumsum(vals)
+    ax.bar(ind[:150], vals[:150])
+    ax.plot(ind[:150], cumvals[:150])
+    try:
+        for i in np.arange(0, 150, 10):
+            ax.annotate(
+                f"{((str(cumvals[i] * 100)[:4]))}",
+                (ind[i], cumvals[i] + 0.02),
+                va="bottom",
+                ha="center",
+                fontsize=12,
+            )
 
-    train_sizes, train_scores, test_scores, fit_times, score_times = learning_curve(  # type: ignore
-        estimator,
-        X,
-        y,
-        scoring=scoring,
-        cv=cv,
-        n_jobs=n_jobs,
-        train_sizes=train_sizes,
-        return_times=True,
-    )
-    train_scores_mean = np.mean(train_scores, axis=1)
-    train_scores_std = np.std(train_scores, axis=1)
-    test_scores_mean = np.mean(test_scores, axis=1)
-    test_scores_std = np.std(test_scores, axis=1)
-    fit_times_mean = np.mean(fit_times, axis=1)
-    fit_times_std = np.std(fit_times, axis=1)
-    score_times_mean = np.mean(score_times, axis=1)
-    score_times_std = np.std(score_times, axis=1)
+        ax.xaxis.set_tick_params(width=0)
+        ax.yaxis.set_tick_params(width=2, length=12)
+        ax.set_xlim([-1, 150])
+        ax.set_xlabel("Principal Component")
+        ax.set_ylabel("Variance Explained (%)")
+        plt.title("Explained Variance Per Principal Component")
+    except Exception:  # pylint: disable=broad-except
+        pass
 
-    # Plot learning curve
-    axes[0].grid()
-    axes[0].fill_between(
-        train_sizes,
-        train_scores_mean - train_scores_std,
-        train_scores_mean + train_scores_std,
-        alpha=0.1,
-        color="r",
-    )
-    axes[0].fill_between(
-        train_sizes,
-        test_scores_mean - test_scores_std,
-        test_scores_mean + test_scores_std,
-        alpha=0.1,
-        color="g",
-    )
-    axes[0].plot(
-        train_sizes, train_scores_mean, "o-", color="r", label="Training score"
-    )
-    axes[0].plot(
-        train_sizes, test_scores_mean, "o-", color="g", label="Cross-validation score"
-    )
-    axes[0].legend(loc="best")
-
-    # Plot n_samples vs fit_times
-    axes[1].grid()
-    axes[1].plot(train_sizes, fit_times_mean, "o-")
-    axes[1].fill_between(
-        train_sizes,
-        fit_times_mean - fit_times_std,
-        fit_times_mean + fit_times_std,
-        alpha=0.1,
-    )
-    axes[1].set_xlabel("Training examples")
-    axes[1].set_ylabel("Fit Times")
-    axes[1].set_title("Scalability - Training Wall Time")
-
-    # Plot n_samples vs score_times
-    axes[2].grid()
-    axes[2].plot(train_sizes, score_times_mean, "o-")
-    axes[2].fill_between(
-        train_sizes,
-        score_times_mean - score_times_std,
-        score_times_mean + score_times_std,
-        alpha=0.1,
-    )
-    axes[2].set_xlabel("Scoring Instances")
-    axes[2].set_ylabel("Fit Times")
-    axes[2].set_title("Scalability - Scoring Wall Time")
-
-    # Plot fit_time vs score
-    fit_time_argsort = fit_times_mean.argsort()
-    fit_time_sorted = fit_times_mean[fit_time_argsort]
-    test_scores_mean_sorted = test_scores_mean[fit_time_argsort]
-    test_scores_std_sorted = test_scores_std[fit_time_argsort]
-    axes[3].grid()
-    axes[3].plot(fit_time_sorted, test_scores_mean_sorted, "o-")
-    axes[3].fill_between(
-        fit_time_sorted,
-        test_scores_mean_sorted - test_scores_std_sorted,
-        test_scores_mean_sorted + test_scores_std_sorted,
-        alpha=0.1,
-    )
-    axes[3].set_xlabel("fit_times")
-    axes[3].set_ylabel("Accuracy")
-    axes[3].set_title("Performance - Accuracy on Validation Data")
-
-    return plt
+    fit_components = np.argmax(cumvals > 0.85)
+    return fit_components
