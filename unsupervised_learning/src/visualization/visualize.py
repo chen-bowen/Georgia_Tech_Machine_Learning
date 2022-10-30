@@ -2,17 +2,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def pca_variance_plot(pca):
+def explained_variance_plot(fitted_model, model_name, threshold=0.85):
     """
-    Creates a variance plot associated with the principal components
+    Creates a explained variance plot associated with the principal components
 
-    INPUT: pca - the result of instantian of PCA object in scikit learn
+    INPUT: fitted_model - the result of instantian of fitted_model object in scikit learn,
+    (PCA or LDA)
 
     OUTPUT: number of components suggested
     """
-    num_components = len(pca.explained_variance_ratio_)
+    num_components = len(fitted_model.explained_variance_ratio_)
     ind = np.arange(num_components)
-    vals = pca.explained_variance_ratio_
+    vals = fitted_model.explained_variance_ratio_
 
     plt.figure(figsize=(15, 8))
     ax = plt.subplot(111)
@@ -34,9 +35,9 @@ def pca_variance_plot(pca):
         ax.set_xlim([-1, 150])
         ax.set_xlabel("Principal Component")
         ax.set_ylabel("Variance Explained (%)")
-        plt.title("Explained Variance Per Principal Component")
+        plt.title(f"Explained Variance Per Component with {model_name}")
     except Exception:  # pylint: disable=broad-except
         pass
 
-    fit_components = np.argmax(cumvals > 0.85)
+    fit_components = np.argmax(cumvals > threshold)
     return fit_components
