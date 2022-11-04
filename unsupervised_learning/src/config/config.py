@@ -35,3 +35,9 @@ ALL_TEAMS = [
 ]
 
 NUM_CLUSTERS_LIST = [3, 4, 5, 6, 7, 8, 9, 10]
+THRESHOLD_MAP = {
+    "PCA": 0.85,
+    "ICA": 5,
+    "LDA": 0.85,
+    "Random Projection": 0.1,
+}

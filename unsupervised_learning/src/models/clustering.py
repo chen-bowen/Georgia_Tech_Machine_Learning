@@ -23,7 +23,10 @@ def k_means_clustering(X):
         # Variance explained by the cluster
         variance_explained_cluster.append(clf.score(X))
 
-    return siloutte_scores, variance_explained_cluster
+    return {
+        "siloutte_scores": siloutte_scores,
+        "variance_explained_cluster": variance_explained_cluster,
+    }
 
 
 def expectation_maximization(X):
@@ -53,4 +56,9 @@ def expectation_maximization(X):
         # Variance explained by the cluster
         variance_explained_cluster.append(clf.score(X))
 
-    return aic_scores, bic_scores, siloutte_scores, variance_explained_cluster
+    return {
+        "aic_scores": aic_scores,
+        "bic_scores": bic_scores,
+        "siloutte_scores": siloutte_scores,
+        "variance_explained_cluster": variance_explained_cluster,
+    }
