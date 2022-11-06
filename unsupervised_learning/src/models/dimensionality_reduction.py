@@ -2,6 +2,7 @@ import warnings
 
 import numpy as np
 import pandas as pd
+import tqdm
 from scipy.stats import kurtosis
 from sklearn.decomposition import PCA, FastICA, TruncatedSVD
 from sklearn.metrics import mean_squared_error
@@ -42,7 +43,7 @@ def reduce_by_random_projection(data):
     """
     mse_reconstructed = []
     reduced_data_list = []
-    for num_components in range(1, data.shape[1]):
+    for num_components in tqdm.tqdm(range(1, data.shape[1])):
         rp = GaussianRandomProjection(n_components=num_components)
         rp_model = rp.fit(data)
         reduced_data = rp_model.transform(data)

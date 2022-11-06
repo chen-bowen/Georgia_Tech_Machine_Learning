@@ -176,7 +176,7 @@ def all_analysis(dataset_name):
                 )
             # save figure
             plt.suptitle(
-                f"Neural Network with {cluster_model_name} and {dim_reduction_model_name} For {dataset_name} Dataset",  # pylint: disable=line-too-long
+                f"Neural Network with {cluster_model_name} and Dimensionaility Reduction For {dataset_name} Dataset",  # pylint: disable=line-too-long
                 fontsize=20,
             )
             plt.tight_layout(rect=[0, 0.01, 1, 0.99])
