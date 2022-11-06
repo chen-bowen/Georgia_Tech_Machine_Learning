@@ -43,7 +43,12 @@ def reduce_by_random_projection(data):
     """
     mse_reconstructed = []
     reduced_data_list = []
-    for num_components in tqdm.tqdm(range(1, max(data.shape[1], 500))):
+    num_components_list = (
+        np.arange(1, data.shape[1])
+        if data.shape[1] < 100
+        else np.arange(5, data.shape[1], 50)
+    )
+    for num_components in tqdm.tqdm(num_components_list):
         rp = GaussianRandomProjection(n_components=num_components)
         rp_model = rp.fit(data)
         reduced_data = rp_model.transform(data)
