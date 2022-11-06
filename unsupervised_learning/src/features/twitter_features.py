@@ -78,4 +78,5 @@ def preprocess_tweets(X):
         ]
     )
     pipeline.fit(X)
-    return pipeline.transform(X)
+    X = pipeline.transform(X)
+    return X.toarray()

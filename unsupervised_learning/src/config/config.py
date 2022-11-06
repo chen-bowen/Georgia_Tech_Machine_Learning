@@ -40,8 +40,8 @@ NUM_CLUSTERS_LIST = np.arange(3, 15, 1)
 THRESHOLD_MAP = {
     "PCA": 0.85,
     "ICA": 5,
-    "LDA": 0.85,
+    "SVD": 0.85,
     "Random Projection": 0.1,
 }
 CLUSTERING_MODEL_NAMES = ["K-means", "Expectation Maximization"]
-DIM_REDUCE_MODEL_NAMES = ["PCA", "ICA", "LDA", "Random Projection"]
+DIM_REDUCE_MODEL_NAMES = ["PCA", "ICA", "SVD", "Random Projection"]

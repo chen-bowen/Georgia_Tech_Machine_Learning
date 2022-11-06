@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.model_selection import learning_curve
 from src.config.config import NUM_CLUSTERS_LIST
 
 
@@ -70,7 +69,7 @@ def explained_variance_plot(explained_variance_ratio, model_name, threshold=0.85
         for i in np.arange(0, 150, 10):
             ax.annotate(
                 f"{((str(cumvals[i] * 100)[:4]))}",
-                (ind[i], cumvals[i] + 0.02),
+                (ind[i], cumvals[i] + 0.01),
                 va="bottom",
                 ha="center",
                 fontsize=12,
@@ -86,10 +85,10 @@ def explained_variance_plot(explained_variance_ratio, model_name, threshold=0.85
         pass
 
     fit_components = np.argmax(cumvals > threshold)
-    return fit_components, plt
+    return np.arange(fit_components), plt
 
 
-def kurtosis_plot(kurtosis_scores, threshold=None):
+def kurtosis_plot(kurtosis_scores, model_name=None, threshold=None):
     """
     Creates a kurtosis plot for every component
     return the number of components that given the threshold
@@ -97,7 +96,7 @@ def kurtosis_plot(kurtosis_scores, threshold=None):
     plt.figure(figsize=(15, 8))
 
     # Create bars
-    bars = plt.bar(kurtosis_scores["component_num"], kurtosis_scores["score"])
+    bars = plt.bar(kurtosis_scores["component_num"], round(kurtosis_scores["score"], 1))
 
     # Create names on the axis and set title
     plt.xlabel("Component Number")
@@ -107,12 +106,13 @@ def kurtosis_plot(kurtosis_scores, threshold=None):
 
     # return the component numbers that has kurtosis scores larger than the threshold
     kurtosis_scores = kurtosis_scores.sort_values(by="score", ascending=False)
-    fitted_components = kurtosis_scores[kurtosis_scores["score"] >= threshold]
-
+    fitted_components = kurtosis_scores[kurtosis_scores["score"] >= threshold][
+        "component_num"
+    ].tolist()
     return fitted_components, plt
 
 
-def mean_squared_error_plot(mse_reconstruct, threshold):
+def mean_squared_error_plot(mse_reconstruct, model_name=None, threshold=None):
     """
     Create a mean squared error for reconstruction
     return the number of components with mse less than threshold
@@ -120,19 +120,16 @@ def mean_squared_error_plot(mse_reconstruct, threshold):
     plt.figure(figsize=(15, 8))
 
     # Create bars
-    bars = plt.bar(mse_reconstruct["component_num"], mse_reconstruct["mse"])
+    plt.bar(mse_reconstruct["component_num"], mse_reconstruct["score"])
 
     # Create names on the axis and set title
-    plt.xlabel("Component Number")
+    plt.xlabel("Number of Components")
     plt.ylabel("MSE Reconstruction")
-    plt.title("MSE Reconstruction for Each Random Projection Component")
-    plt.bar_label(bars, padding=0.5)
+    plt.title("MSE Reconstruction for Using x Random Projection Components")
 
     # return the component numbers that has MSE less than the threshold
-    mse_reconstruct = mse_reconstruct.sort_values(by="mse", ascending=False)
-    fitted_components = mse_reconstruct[mse_reconstruct["mse"] <= threshold]
-
-    return fitted_components, plt
+    fitted_components = len(mse_reconstruct[mse_reconstruct["score"] >= threshold])
+    return np.arange(fitted_components), plt
 
 
 def plot_learning_curve(
