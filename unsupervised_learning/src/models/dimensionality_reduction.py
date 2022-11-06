@@ -46,7 +46,7 @@ def reduce_by_random_projection(data):
         rp = GaussianRandomProjection(n_components=num_components)
         rp_model = rp.fit(data)
         reduced_data = rp_model.transform(data)
-        reduced_data_list.append(reduced_data)
+        reduced_data_list.append(pd.DataFrame(reduced_data))
         # find P_inverse and get the reconstructed_data
         p_inverse = np.linalg.pinv(rp_model.components_.T)
         reconstructed_data = reduced_data.dot(p_inverse)

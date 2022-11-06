@@ -48,7 +48,20 @@ class TwitterDataset:
 
         # sample to get a smaller dataset
         data = data.groupby("tweet_id").head(1)
-
+        data = data[
+            data["entity"].isin(
+                [
+                    "FIFA",
+                    "Amazon",
+                    "NBA2K",
+                    "MaddenNFL",
+                    "Google",
+                    "Xbox(Xseries)",
+                    "Facebook",
+                    "Overwatch",
+                ]
+            )
+        ]
         # get the training, validation and test data and save to X, y attributes
         y = data["sentiment"].map(self.label_encode_mapping)
         X = data.drop(["sentiment"], axis=1)

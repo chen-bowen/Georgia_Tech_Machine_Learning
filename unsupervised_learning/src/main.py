@@ -107,24 +107,35 @@ def all_analysis(dataset_name):
         )
 
     # perform clustering again on the reduced dataset
-    cluster_data_map = defaultdict(defaultdict())
-    optimal_num_clusters = {"K-means": 8, "Expectation Maximization": 10}
+    cluster_data_map = defaultdict(lambda: defaultdict(lambda: dict))
+    optimal_num_clusters = {"K-means": 8, "Expectation Maximization": 8}
     for cluster_model_name in CLUSTERING_MODEL_NAMES:
         for dim_reduction_model_name, reduced_data in reduced_data_map.items():
+            print(
+                f"Clustering {dataset_name} Dataset with {dim_reduction_model_name} Using {cluster_model_name}"
+            )
+            clustered_data, metrics = CLUSTERING_MODEL_MAPPING[cluster_model_name](
+                reduced_data, optimal_num_clusters[cluster_model_name]
+            )
             cluster_data_map[cluster_model_name][
                 dim_reduction_model_name
-            ] = CLUSTERING_MODEL_MAPPING[cluster_model_name](
-                reduced_data, optimal_num_clusters[cluster_model_name]
+            ] = clustered_data
+            print(
+                f"""
+                Metrics for Clustering {dataset_name} Dataset with {dim_reduction_model_name} Using {cluster_model_name}:
+                {metrics}
+                """
             )
 
     # run neural network with dimension reduced features on NBA dataset only
     if dataset_name == "NBA":
         _, axes = plt.subplots(4, 4, figsize=(20, 20))
-        for i, dim_reduction_model_name, reduced_data in enumerate(
+        for i, (dim_reduction_model_name, reduced_data) in enumerate(
             reduced_data_map.items()
         ):
-            neural_network = MLPClassifier(hidden_layer_sizes=(32,))
+            neural_network = MLPClassifier(hidden_layer_sizes=(32,), max_iter=1000)
             cv = ShuffleSplit(n_splits=5, test_size=0.1, random_state=RANDOM_SEED)
+            reduced_data.columns = list(map(str, reduced_data.columns))
             # plot learning curves cluster on the corresponding axes
             plot_learning_curve(
                 dim_reduction_model_name,
@@ -142,12 +153,12 @@ def all_analysis(dataset_name):
             fontsize=20,
         )
         plt.tight_layout(rect=[0, 0.01, 1, 0.99])
-        plt.savefig("../reports/figures/nn_dim_reduction.jpg", dpi=150)
+        plt.savefig("./reports/figures/nn_dim_reduction.jpg", dpi=150)
 
         # run neural network with cluster label added as features
         for cluster_model_name in CLUSTERING_MODEL_NAMES:
             _, axes = plt.subplots(4, 4, figsize=(20, 20))
-            for i, dim_reduction_model_name, reduced_data in enumerate(
+            for i, (dim_reduction_model_name, reduced_data) in enumerate(
                 reduced_data_map.items()
             ):
                 neural_network = MLPClassifier(hidden_layer_sizes=(32,))
@@ -170,7 +181,7 @@ def all_analysis(dataset_name):
             )
             plt.tight_layout(rect=[0, 0.01, 1, 0.99])
             plt.savefig(
-                "../reports/figures/nn_{cluster_model_name}_dim_reduction.jpg", dpi=150
+                f"./reports/figures/nn_{cluster_model_name}_dim_reduction.jpg", dpi=150
             )
 
 
@@ -205,5 +216,5 @@ if __name__ == "__main__":
         "NBA": preprocess_nba_players_data,
         "Twitter": preprocess_tweets,
     }
-    # all_analysis("Twitter")
     all_analysis("NBA")
+    all_analysis("Twitter")

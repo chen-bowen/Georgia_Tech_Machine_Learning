@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.model_selection import learning_curve
 from src.config.config import NUM_CLUSTERS_LIST
 
 
-def kmeans_visuals(siloutte_scores, variance_explained_cluster, dataset_name):
+def kmeans_visuals(siloutte_scores, average_distance_cluster, dataset_name):
     """Plot the Siloutte scores and variance explained per cluster for k means"""
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 10))
     fig.suptitle(f"Clustering {dataset_name} with K-Means Clustering")
@@ -13,7 +14,7 @@ def kmeans_visuals(siloutte_scores, variance_explained_cluster, dataset_name):
     ax1.set_ylabel("Siloutte Scores")
     ax1.set_title("Siloutte Score vs. # Clusters")
     # plot the variance explained per cluster
-    ax2.plot(NUM_CLUSTERS_LIST, variance_explained_cluster)
+    ax2.plot(NUM_CLUSTERS_LIST, average_distance_cluster)
     ax2.set_xlabel("NUmber of Clusters")
     ax2.set_ylabel("Average Distance Between Points")
     ax2.set_title("Average Distance vs. # Clusters")
@@ -21,7 +22,7 @@ def kmeans_visuals(siloutte_scores, variance_explained_cluster, dataset_name):
 
 
 def expectation_maximization_visuals(
-    aic_scores, bic_scores, siloutte_scores, variance_explained_cluster, dataset_name
+    aic_scores, bic_scores, siloutte_scores, average_distance_cluster, dataset_name
 ):
     """
     Plot the aic, bic siloutte scores, and variance explained per cluster
@@ -35,7 +36,7 @@ def expectation_maximization_visuals(
     ax1.set_ylabel("Siloutte Scores")
     ax1.set_title("Siloutte Score vs. Number of Clusters")
     # plot the variance explained per cluster
-    ax2.plot(NUM_CLUSTERS_LIST, variance_explained_cluster)
+    ax2.plot(NUM_CLUSTERS_LIST, average_distance_cluster)
     ax2.set_xlabel("NUmber of Clusters")
     ax2.set_ylabel("Variance explained Per Cluster")
     ax2.set_title("Variance Explained vs. Number of Clusters")
@@ -219,7 +220,7 @@ def plot_learning_curve(
 
     axes[0].set_title(
         f"""
-        Learning Curve with {model_name} Transformation on the NBA DataSet
+        Learning Curve with {model_name} Transformation
         """
     )
     if ylim is not None:
