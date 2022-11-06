@@ -12,6 +12,7 @@ def reduce_by_pca(data):
     Transform the data with PCA with number of components,
     return the reduced data and  pca object
     """
+    data = data.toarray()
     pca = PCA()
     pca_model = pca.fit(data)
     reduced_data = pca_model.transform(data)

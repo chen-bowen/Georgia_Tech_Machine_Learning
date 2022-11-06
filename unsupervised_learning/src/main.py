@@ -97,18 +97,21 @@ def all_analysis(dataset_name):
 
     # perform clustering
     for cluster_model_name in CLUSTERING_MODEL_NAMES:
+        print(f"Analyzing {cluster_model_name} Model")
         clustering_analysis(X, cluster_model_name, dataset_name)
-        breakpoint()
+
     # perform dimensionality reduction and save reduced dataset
     reduced_data_map = defaultdict()
     for dim_reduction_model_name in DIM_REDUCE_MODEL_NAMES:
+        print(f"Analyzing {dim_reduction_model_name} Model")
         reduced_data_map[dim_reduction_model_name] = dimensionality_reduction_analysis(
-            X, cluster_model_name, dataset_name
+            X, dim_reduction_model_name, dataset_name
         )
+        breakpoint()
 
     # perform clustering again on the reduced dataset
     cluster_data_map = defaultdict(defaultdict())
-    optimal_num_clusters = {"K-means": 5, "Expectation Maximization": 5}
+    optimal_num_clusters = {"K-means": 8, "Expectation Maximization": 5}
     for cluster_model_name in CLUSTERING_MODEL_NAMES:
         for dim_reduction_model_name, reduced_data in reduced_data_map.items():
             cluster_data_map[cluster_model_name][

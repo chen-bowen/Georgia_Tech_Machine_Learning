@@ -48,7 +48,7 @@ def expectation_maximization_experiment(X):
 
         # AIC and BIC
         aic_scores.append(clf.aic(X))
-        bic_scores.append(clf.aic(X))
+        bic_scores.append(clf.bic(X))
 
         # Silhoutette score
         siloutte_scores.append(
