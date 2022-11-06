@@ -22,13 +22,13 @@ def kmeans_visuals(siloutte_scores, average_distance_cluster, dataset_name):
 
 
 def expectation_maximization_visuals(
-    aic_scores, bic_scores, siloutte_scores, average_distance_cluster, dataset_name
+    siloutte_scores, average_distance_cluster, dataset_name
 ):
     """
     Plot the aic, bic siloutte scores, and variance explained per cluster
     for expectation maximization
     """
-    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(20, 20))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 10))
     fig.suptitle(f"Clustering {dataset_name} with Expectation Maximization")
     # plot Siloutte Scores vs number of clusters
     ax1.plot(NUM_CLUSTERS_LIST, siloutte_scores)
@@ -40,16 +40,6 @@ def expectation_maximization_visuals(
     ax2.set_xlabel("NUmber of Clusters")
     ax2.set_ylabel("Variance explained Per Cluster")
     ax2.set_title("Variance Explained vs. Number of Clusters")
-    # plot AIC curves
-    ax3.plot(NUM_CLUSTERS_LIST, aic_scores)
-    ax3.set_xlabel("NUmber of Clusters")
-    ax3.set_ylabel("AIC Score")
-    ax3.set_title("AIC Score vs. Number of Clusters")
-    # plot BIC curves
-    ax4.plot(NUM_CLUSTERS_LIST, bic_scores)
-    ax4.set_xlabel("NUmber of Clusters")
-    ax4.set_ylabel("BIC Score")
-    ax4.set_title("BIC Score vs. Number of Clusters")
     return plt
 
 
@@ -314,4 +304,29 @@ def plot_learning_curve(
     axes[3].set_ylabel("Accuracy")
     axes[3].set_title("Performance - Accuracy on Validation Data")
 
+    return plt
+
+
+def dim_reduced_metrics_plot(
+    metrics, clustering_model_name, dim_reduce_model_name, dataset_name
+):
+    """Plot the bar chart of all metrics on dimensionality reduced clustering"""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 10))
+
+    fig.suptitle(
+        f"Clustering {dim_reduce_model_name} Reduced {dataset_name} with {clustering_model_name}"
+    )
+    # plot Siloutte Scores
+    bars1 = ax1.bar(metrics["model_name"], metrics["silhouette_score"])
+    ax1.set_xlabel("Dimensionality Reduction Method")
+    ax1.set_ylabel("Siloutte Scores")
+    ax1.set_title("Siloutte Scores")
+    ax1.bar_label(bars1)
+
+    # plot Average distance cluster
+    bars2 = ax2.bar(metrics["model_name"], metrics["average_distance_cluster"])
+    ax2.set_xlabel("NUmber of Clusters")
+    ax2.set_ylabel("Average Distance Within Cluster")
+    ax2.set_title("Average Distance Within Cluster")
+    ax2.bar_label(bars2)
     return plt

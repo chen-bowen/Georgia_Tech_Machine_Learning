@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 import matplotlib.pyplot as plt
+import pandas as pd
 from sklearn.model_selection import ShuffleSplit
 from sklearn.neural_network import MLPClassifier
 from src.config.config import (
@@ -26,6 +27,7 @@ from src.models.dimensionality_reduction import (
     reduce_by_svd,
 )
 from src.visualization.visualize import (
+    dim_reduced_metrics_plot,
     expectation_maximization_visuals,
     explained_variance_plot,
     kmeans_visuals,
@@ -108,8 +110,10 @@ def all_analysis(dataset_name):
 
     # perform clustering again on the reduced dataset
     cluster_data_map = defaultdict(lambda: defaultdict(lambda: dict))
-    optimal_num_clusters = {"K-means": 8, "Expectation Maximization": 8}
+    optimal_num_clusters = {"K-means": 8, "Expectation Maximization": 10}
+
     for cluster_model_name in CLUSTERING_MODEL_NAMES:
+        metrics_list = []
         for dim_reduction_model_name, reduced_data in reduced_data_map.items():
             print(
                 f"Clustering {dataset_name} Dataset with {dim_reduction_model_name} Using {cluster_model_name}"
@@ -126,14 +130,26 @@ def all_analysis(dataset_name):
                 {metrics}
                 """
             )
+            metrics_list.append({"model_name": dim_reduction_model_name, **metrics})
+        dim_reduced_metrics_plot(
+            pd.DataFrame(metrics_list),
+            cluster_model_name,
+            dim_reduction_model_name,
+            dataset_name,
+        )
+        plt.tight_layout(rect=[0, 0.01, 1, 0.99])
+        plt.savefig(
+            f"./reports/figures/{cluster_model_name}_{dataset_name}_metrics.jpg",
+            dpi=150,
+        )
 
     # run neural network with dimension reduced features on NBA dataset only
-    if dataset_name == "NBA":
+    if dataset_name == "NBA2":
         _, axes = plt.subplots(4, 4, figsize=(20, 20))
         for i, (dim_reduction_model_name, reduced_data) in enumerate(
             reduced_data_map.items()
         ):
-            neural_network = MLPClassifier(hidden_layer_sizes=(32,), max_iter=1000)
+            neural_network = MLPClassifier(hidden_layer_sizes=(32,), max_iter=5000)
             cv = ShuffleSplit(n_splits=5, test_size=0.1, random_state=RANDOM_SEED)
             reduced_data.columns = list(map(str, reduced_data.columns))
             # plot learning curves cluster on the corresponding axes
