@@ -53,4 +53,5 @@ class TwitterDataset:
         y = data["sentiment"].map(self.label_encode_mapping)
         X = data.drop(["sentiment"], axis=1)
 
-        return X, y
+        X["target"] = y
+        return X

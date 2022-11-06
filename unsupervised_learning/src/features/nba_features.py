@@ -77,5 +77,5 @@ def preprocess_nba_players_data(X):
             ("scaler", StandardScaler()),
         ]
     )
-    X = pipeline.fit(X)
-    return X
+    pipeline.fit(X)
+    return pipeline.transform(X)

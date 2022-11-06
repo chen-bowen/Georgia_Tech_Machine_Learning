@@ -95,4 +95,5 @@ class NBADataset:
             ],
             axis=1,
         )
-        return X, y
+        X["target"] = y
+        return X

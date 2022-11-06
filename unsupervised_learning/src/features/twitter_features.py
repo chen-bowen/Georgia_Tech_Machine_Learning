@@ -77,5 +77,5 @@ def preprocess_tweets(X):
             ("tfidf", TfidfTransformer()),
         ]
     )
-    X = pipeline.fit(X)
-    return X
+    pipeline.fit(X)
+    return pipeline.transform(X)
