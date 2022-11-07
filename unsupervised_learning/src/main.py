@@ -110,41 +110,48 @@ def all_analysis(dataset_name):
 
     # perform clustering again on the reduced dataset
     cluster_data_map = defaultdict(lambda: defaultdict(lambda: dict))
-    optimal_num_clusters = {"K-means": 8, "Expectation Maximization": 10}
+    optimal_num_clusters = (
+        {"K-means": 5, "Expectation Maximization": 10}
+        if dataset_name == "NBA"
+        else {"K-means": 8, "Expectation Maximization": 10}
+    )
 
     for cluster_model_name in CLUSTERING_MODEL_NAMES:
         metrics_list = []
         for dim_reduction_model_name, reduced_data in reduced_data_map.items():
-            print(
-                f"Clustering {dataset_name} Dataset with {dim_reduction_model_name} Using {cluster_model_name}"
-            )
-            clustered_data, metrics = CLUSTERING_MODEL_MAPPING[cluster_model_name](
-                reduced_data, optimal_num_clusters[cluster_model_name]
-            )
-            cluster_data_map[cluster_model_name][
-                dim_reduction_model_name
-            ] = clustered_data
-            print(
-                f"""
-                Metrics for Clustering {dataset_name} Dataset with {dim_reduction_model_name} Using {cluster_model_name}:
-                {metrics}
-                """
-            )
-            metrics_list.append({"model_name": dim_reduction_model_name, **metrics})
-        dim_reduced_metrics_plot(
-            pd.DataFrame(metrics_list),
-            cluster_model_name,
-            dim_reduction_model_name,
-            dataset_name,
-        )
-        plt.tight_layout(rect=[0, 0.01, 1, 0.99])
-        plt.savefig(
-            f"./reports/figures/{cluster_model_name}_{dataset_name}_metrics.jpg",
-            dpi=150,
-        )
+            try:
+                print(
+                    f"Clustering {dataset_name} Dataset with {dim_reduction_model_name} Using {cluster_model_name}"
+                )
+                clustered_data, metrics = CLUSTERING_MODEL_MAPPING[cluster_model_name](
+                    reduced_data, optimal_num_clusters[cluster_model_name]
+                )
+                cluster_data_map[cluster_model_name][
+                    dim_reduction_model_name
+                ] = clustered_data
+                print(
+                    f"""
+                    Metrics for Clustering {dataset_name} Dataset with {dim_reduction_model_name} Using {cluster_model_name}:
+                    {metrics}
+                    """
+                )
+                metrics_list.append({"model_name": dim_reduction_model_name, **metrics})
+                dim_reduced_metrics_plot(
+                    pd.DataFrame(metrics_list),
+                    cluster_model_name,
+                    dim_reduction_model_name,
+                    dataset_name,
+                )
+                plt.tight_layout(rect=[0, 0.01, 1, 0.99])
+                plt.savefig(
+                    f"./reports/figures/{cluster_model_name}_{dataset_name}_metrics.jpg",
+                    dpi=150,
+                )
+            except Exception:  # pylint: disable=broad-except
+                pass
 
     # run neural network with dimension reduced features on NBA dataset only
-    if dataset_name == "NBA2":
+    if dataset_name == "NBA":
         _, axes = plt.subplots(4, 4, figsize=(20, 20))
         for i, (dim_reduction_model_name, reduced_data) in enumerate(
             reduced_data_map.items()
@@ -177,7 +184,7 @@ def all_analysis(dataset_name):
             for i, (dim_reduction_model_name, reduced_data) in enumerate(
                 reduced_data_map.items()
             ):
-                neural_network = MLPClassifier(hidden_layer_sizes=(32,))
+                neural_network = MLPClassifier(hidden_layer_sizes=(32,), max_iter=5000)
                 cv = ShuffleSplit(n_splits=5, test_size=0.1, random_state=RANDOM_SEED)
                 # plot learning curves cluster on the corresponding axes
                 plot_learning_curve(
@@ -232,5 +239,5 @@ if __name__ == "__main__":
         "NBA": preprocess_nba_players_data,
         "Twitter": preprocess_tweets,
     }
-    # all_analysis("NBA")
+    all_analysis("NBA")
     all_analysis("Twitter")

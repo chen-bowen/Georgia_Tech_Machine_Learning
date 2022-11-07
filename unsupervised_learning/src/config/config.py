@@ -1,6 +1,6 @@
 import numpy as np
 
-RANDOM_SEED = 7
+RANDOM_SEED = 100
 ALL_POSITIONS = ["PG", "SG", "SF", "PF", "C"]
 ALL_TEAMS = [
     "WAS",
@@ -41,7 +41,7 @@ THRESHOLD_MAP = {
     "PCA": 0.85,
     "ICA": 5,
     "SVD": 0.85,
-    "Random Projection": 0.1,
+    "Random Projection": 0.3,
 }
 CLUSTERING_MODEL_NAMES = ["K-means", "Expectation Maximization"]
 DIM_REDUCE_MODEL_NAMES = ["PCA", "ICA", "SVD", "Random Projection"]

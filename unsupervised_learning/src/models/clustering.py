@@ -1,7 +1,7 @@
 from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
-from src.config.config import NUM_CLUSTERS_LIST
+from src.config.config import NUM_CLUSTERS_LIST, RANDOM_SEED
 
 
 def k_means_clustering_experiment(data):
@@ -12,7 +12,11 @@ def k_means_clustering_experiment(data):
 
     for num_clusters in NUM_CLUSTERS_LIST:
         # fit the k means clustering
-        clf = KMeans(n_clusters=num_clusters, init="k-means++")
+        clf = KMeans(
+            n_clusters=num_clusters,
+            init="k-means++",
+            random_state=RANDOM_SEED,
+        )
         clf.fit(data)
         predicted_label = clf.predict(data)
 
@@ -38,7 +42,10 @@ def expectation_maximization_experiment(data):
     for num_clusters in NUM_CLUSTERS_LIST:
         # fit the gaussian mixture clustering
         clf = GaussianMixture(
-            n_components=num_clusters, covariance_type="spherical", init_params="kmeans"
+            n_components=num_clusters,
+            covariance_type="spherical",
+            init_params="kmeans",
+            random_state=RANDOM_SEED,
         )
         clf.fit(data)
         predicted_label = clf.predict(data)
@@ -61,7 +68,7 @@ def k_means_clustering(data, num_clusters):
     K means clustering and returned the original dataset
     with the clustering label given the number of clusters
     """
-    clf = KMeans(n_clusters=num_clusters, init="k-means++")
+    clf = KMeans(n_clusters=num_clusters, init="k-means++", random_state=RANDOM_SEED)
     clf.fit(data)
     predicted_label = clf.predict(data)
     # get metrics
@@ -81,7 +88,10 @@ def expectation_maximization_clustering(data, num_clusters):
     with the clustering label given the number of clusters
     """
     clf = GaussianMixture(
-        n_components=num_clusters, covariance_type="spherical", init_params="kmeans"
+        n_components=num_clusters,
+        covariance_type="spherical",
+        init_params="kmeans",
+        random_state=RANDOM_SEED,
     )
     clf.fit(data)
     predicted_label = clf.predict(data)
