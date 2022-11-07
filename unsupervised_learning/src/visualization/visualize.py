@@ -5,7 +5,7 @@ from src.config.config import NUM_CLUSTERS_LIST
 
 
 def kmeans_visuals(siloutte_scores, average_distance_cluster, dataset_name):
-    """Plot the Siloutte scores and variance explained per cluster for k means"""
+    """Plot the Siloutte scores and average distance within cluster for k means"""
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 10))
     fig.suptitle(f"Clustering {dataset_name} with K-Means Clustering")
     # plot Siloutte Scores vs number of clusters
@@ -13,7 +13,7 @@ def kmeans_visuals(siloutte_scores, average_distance_cluster, dataset_name):
     ax1.set_xlabel("Number of Clusters")
     ax1.set_ylabel("Siloutte Scores")
     ax1.set_title("Siloutte Score vs. # Clusters")
-    # plot the variance explained per cluster
+    # plot the average distance within cluster
     ax2.plot(NUM_CLUSTERS_LIST, average_distance_cluster)
     ax2.set_xlabel("NUmber of Clusters")
     ax2.set_ylabel("Average Distance Between Points")
@@ -25,7 +25,7 @@ def expectation_maximization_visuals(
     siloutte_scores, average_distance_cluster, dataset_name
 ):
     """
-    Plot the aic, bic siloutte scores, and variance explained per cluster
+    Plot the aic, bic siloutte scores, and average distance within cluster
     for expectation maximization
     """
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 10))
@@ -35,11 +35,11 @@ def expectation_maximization_visuals(
     ax1.set_xlabel("NUmber of Clusters")
     ax1.set_ylabel("Siloutte Scores")
     ax1.set_title("Siloutte Score vs. Number of Clusters")
-    # plot the variance explained per cluster
+    # plot the average distance within cluster
     ax2.plot(NUM_CLUSTERS_LIST, average_distance_cluster)
     ax2.set_xlabel("NUmber of Clusters")
-    ax2.set_ylabel("Variance explained Per Cluster")
-    ax2.set_title("Variance Explained vs. Number of Clusters")
+    ax2.set_ylabel("Average Distance Within Cluster")
+    ax2.set_title("Average Distance vs. Number of Clusters")
     return plt
 
 
@@ -70,7 +70,7 @@ def explained_variance_plot(explained_variance_ratio, model_name, threshold=0.85
         ax.yaxis.set_tick_params(width=2, length=12)
         ax.set_xlim([-1, 150])
         ax.set_xlabel("Principal Component")
-        ax.set_ylabel("Variance Explained (%)")
+        ax.set_ylabel("Average Distance Within Cluster (%)")
         plt.title(f"Explained Variance Per Component with {model_name}")
     except Exception:  # pylint: disable=broad-except
         pass

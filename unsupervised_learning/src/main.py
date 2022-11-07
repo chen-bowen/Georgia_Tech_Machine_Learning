@@ -111,9 +111,9 @@ def all_analysis(dataset_name):
     # perform clustering again on the reduced dataset
     cluster_data_map = defaultdict(lambda: defaultdict(lambda: dict))
     optimal_num_clusters = (
-        {"K-means": 5, "Expectation Maximization": 10}
+        {"K-means": 40, "Expectation Maximization": 45}
         if dataset_name == "NBA"
-        else {"K-means": 8, "Expectation Maximization": 10}
+        else {"K-means": 35, "Expectation Maximization": 40}
     )
 
     for cluster_model_name in CLUSTERING_MODEL_NAMES:
@@ -239,5 +239,5 @@ if __name__ == "__main__":
         "NBA": preprocess_nba_players_data,
         "Twitter": preprocess_tweets,
     }
-    all_analysis("NBA")
+    # all_analysis("NBA")
     all_analysis("Twitter")

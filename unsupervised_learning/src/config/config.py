@@ -36,7 +36,7 @@ ALL_TEAMS = [
     "BRK",
 ]
 
-NUM_CLUSTERS_LIST = np.arange(3, 15, 1)
+NUM_CLUSTERS_LIST = list(np.arange(3, 15, 1)) + [20, 25, 30, 35, 40, 45, 50]
 THRESHOLD_MAP = {
     "PCA": 0.85,
     "ICA": 5,
