@@ -239,5 +239,5 @@ if __name__ == "__main__":
         "NBA": preprocess_nba_players_data,
         "Twitter": preprocess_tweets,
     }
-    # all_analysis("NBA")
+    all_analysis("NBA")
     all_analysis("Twitter")
