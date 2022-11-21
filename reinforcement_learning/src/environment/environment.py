@@ -22,6 +22,7 @@ class Environment:
             obs, reward, done, _ = self.env.step(int(policy[obs]))
             # calculate the discounted total reward
             total_reward += self.gamma**step_idx * reward
+            # increment step
             step_idx += 1
             if done:
                 break
