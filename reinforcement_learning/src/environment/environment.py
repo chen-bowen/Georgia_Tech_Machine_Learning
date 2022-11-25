@@ -4,8 +4,8 @@ import gym
 class Environment:
     """Generate environment given name"""
 
-    def __init__(self, environment_name, render=False, gamma=1.0, n=1000):
-        self.env = gym.make(environment_name)
+    def __init__(self, env_args, render=False, gamma=1.0, n=1000):
+        self.env = gym.make(**env_args)
         self.render = render
         self.gamma = gamma
         self.n = n

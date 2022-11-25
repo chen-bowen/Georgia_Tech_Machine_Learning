@@ -1,6 +1,9 @@
 import numpy as np
 
-from src.config.config import ALPHA, MAX_ITERATIONS  # pylint: disable=import-error
+from src.config.config import (  # pylint: disable=import-error，no-name-in-module
+    ALPHA,
+    MAX_ITERATIONS,
+)
 
 
 class Agent:
@@ -78,7 +81,7 @@ class Agent:
                 break
         return v
 
-    def Q_learning(self):
+    def q_learning(self):
         # one episode learning
         state = self.env.reset()
         # self.env.render()
