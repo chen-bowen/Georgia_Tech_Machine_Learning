@@ -1,4 +1,6 @@
+import gym
 import numpy as np
+from hiive.mdptoolbox.mdp import PolicyIteration, QLearning, ValueIteration
 
 from src.config.config import (  # pylint: disable=import-error，no-name-in-module
     ALPHA,
@@ -6,15 +8,15 @@ from src.config.config import (  # pylint: disable=import-error，no-name-in-mod
 )
 
 
-class Agent:
+class FrozenLakeAgent:
     """
     Implementation of of the environment solving agent given the environment object
     Agent is capable of solving the environment using
     value iteration, policy iteration and Q learning
     """
 
-    def __init__(self, environment, eps=1e-10):
-        self.env = environment
+    def __init__(self, environment_args, eps=1e-10):
+        self.env = gym.make(**environment_args)
         self.eps = eps
         self._init_q_values()
         self._init_convergence_metrics()
@@ -50,9 +52,12 @@ class Agent:
             self.policy_iteration_rewards.append(self.env.evaluate_policy(policy))
             # if converged, stop
             if np.all(policy == new_policy):
-                print(f"Policy-Iteration converged at step {i + 1}.")
-                break
+                print(f"Policy-Iteration converged at step #{i + 1}.")
+                self.policy_iteration_rewards.append(self.env.evaluate_policy(policy))
+                return policy
+
             policy = new_policy
+        print(f"Policy-Iteration never converged at iteration # {i + 1}.")
         return policy
 
     def value_iteration(self):
@@ -71,42 +76,65 @@ class Agent:
                 ]
                 # set the state value to be the maximum of q values
                 v[s] = max(q_sa)
-
             # extract the policy and evaluate the rewards
-            policy = self.get_optimal_policy(v)
-            self.value_iteration_rewards.append(self.env.evaluate_policy(policy))
+            if i % 50 == 0:
+                policy = self.get_optimal_policy(v)
+                self.value_iteration_rewards.append(self.env.evaluate_policy(policy))
 
             if np.sum(np.fabs(prev_v - v)) <= self.eps:
-                print(f"Value-iteration converged at iteration # {i + 1}.")
-                break
-        return v
+                print(f"Value-Iteration converged at iteration # {i + 1}.")
+                policy = self.get_optimal_policy(v)
+                self.value_iteration_rewards.append(self.env.evaluate_policy(policy))
+                return policy
 
-    def q_learning(self):
+        print(f"Value-Iteration never converged at iteration # {i + 1}.")
+        policy = self.get_optimal_policy(v)
+        return policy
+
+    def update_q_values(self):
         # one episode learning
-        state = self.env.reset()
+        state = self.env.environment_obj.reset()[0]
         # self.env.render()
 
         for _ in range(MAX_ITERATIONS):
-            # sample an action from the action space
-            action = self.env.action_space.sample()
-            # take a step using that action
-            next_state, reward, done, _ = self.env.step(action)
-            # find the max q value
-            q_next_max = np.max(self.q_value[next_state])
-            # update the Q value as a weighted average
-            #  Q <- Q + a(Q' - Q)
-            # <=> Q <- (1-a)Q + a(Q')
-            self.q_value[state][action] = (
-                self.q_value[state][action] * (1 - ALPHA)
-                + (reward + self.env.gamma * q_next_max) * ALPHA
-            )
-            # append reward to q_learning_rewards
+            act = self.env.environment_obj.action_space.sample()  # random
+            next_state, reward, done, _, _ = self.env.environment_obj.step(act)
             self.q_learning_rewards.append(reward)
-
+            q_next_max = np.max(self.q_value[next_state])
+            # Q <- Q + a(Q' - Q)
+            # <=> Q <- (1-a)Q + a(Q')
+            self.q_value[state][act] = (1 - ALPHA) * self.q_value[state][
+                act
+            ] + ALPHA * (reward + self.env.gamma * q_next_max)
+            # self.env.render()
             if done:
-                return reward
+                self.q_learning_rewards.append(reward)
+                return
             else:
                 state = next_state
+
+    def q_learning(self):
+        # update q values
+        for i in range(MAX_ITERATIONS):
+            self.update_q_values()
+        # reset the environment, use q values to make decisions
+        state = self.env.environment_obj.reset()[0]
+        for j in range(MAX_ITERATIONS):
+            act = np.argmax(self.q_value[state])
+            next_state, reward, done, _, _ = self.env.environment_obj.step(act)
+            self.q_learning_rewards.append(reward)
+            # environment solved
+            if done:
+                print(f"Q learning converged at step # {i + j + 1}.")
+                self.q_learning_rewards.append(reward)
+                # get optimal policy
+                policy = self.q_value.argmax(axis=1)
+                return policy
+            else:
+                state = next_state
+        print(f"Q learning never converged at step # {i + j + 1}.")
+        policy = self.q_value.argmax(axis=1)
+        return policy
 
     def get_optimal_policy(self, value_function):
         """Get the optimal policy given a value-function"""
@@ -114,9 +142,9 @@ class Agent:
         # loop through all states in the environment
         for s in range(self.env.nS):
             # initialize the q value for taking action a at state s
-            q_sa = np.zeros(self.env.action_space.n)
+            q_sa = np.zeros(self.env.nA)
             # loop through all actions in the action spaces
-            for a in range(self.env.action_space.n):
+            for a in range(self.env.nA):
                 # (probability, next state, reward, done)
                 for p, next_state, reward, _ in self.env.P[s][a]:
                     # calculate the sum of discounted reward
