@@ -1,5 +1,3 @@
-import numpy as np
-
 RANDOM_SEED = 100
 MAX_ITERATIONS = 1e5
 # Q learning params
@@ -7,7 +5,7 @@ ALPHA = 0.2  # learning rate
 EPSILON = 1e-5
 ALPHA_DECAY = 0.999
 EPSILON_DECAY = 0.9
-GAMMA_LIST = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+GAMMA_LIST = [0.1, 0.3, 0.6, 0.9, 1.0]
 LEARNING_LIMIT = 1000
 FROZEN_LAKE_MAPS = {
     "4x4": ["SFFF", "FHFH", "FFFH", "HFFG"],
