@@ -158,7 +158,8 @@ def forest_management_analysis(problem_size):
     visualize_statistics_forest(
         f"./reports/stats/forestManagement_{problem_size}.csv", "policy_iteration"
     )
-    plt.suptitle("Forest Management Statistics - Policy Iteration")
+    plt.suptitle("Forest Management Statistics - Policy Iteration", fontsize=15)
+    plt.subplots_adjust(top=0.8)
     plt.savefig(
         f"./reports/figures/forestManagement_{problem_size}_policy_iter_anylze.jpg",
         dpi=150,
@@ -167,7 +168,8 @@ def forest_management_analysis(problem_size):
     visualize_statistics_forest(
         f"./reports/stats/forestManagement_{problem_size}.csv", "value_iteration"
     )
-    plt.suptitle("Forest Management Statistics - Value Iteration")
+    plt.suptitle("Forest Management Statistics - Value Iteration", fontsize=15)
+    plt.subplots_adjust(top=0.8)
     plt.savefig(
         f"./reports/figures/forestManagement_{problem_size}_value_iter_anylze.jpg",
         dpi=150,
@@ -176,7 +178,8 @@ def forest_management_analysis(problem_size):
     visualize_statistics_forest(
         f"./reports/stats/forestManagement_{problem_size}.csv", "q_learning"
     )
-    plt.suptitle("Forest Management Statistics - Q Learning")
+    plt.suptitle("Forest Management Statistics - Q Learning", fontsize=15)
+    plt.subplots_adjust(top=0.8)
     plt.savefig(
         f"./reports/figures/forestManagement_{problem_size}_q_learning_anylze.jpg",
         dpi=150,

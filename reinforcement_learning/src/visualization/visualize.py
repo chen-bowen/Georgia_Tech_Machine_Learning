@@ -134,7 +134,7 @@ def visualize_statistics_forest(file_path, algorithm):
 
     statistics = pd.read_csv(file_path)
     statistics = statistics[statistics["method"] == algorithm]
-    _, axes = plt.subplots(1, 3, figsize=(10, 5))
+    _, axes = plt.subplots(1, 3, figsize=(10, 4))
 
     axes[0].plot(statistics["gamma"], statistics["time"], "o-", color="r")
     axes[0].set_title("Gamma vs Wall Time")
@@ -153,5 +153,7 @@ def visualize_statistics_forest(file_path, algorithm):
         color="k",
     )
     axes[2].set_title("Gamma vs Rewards")
+
+    plt.tight_layout(rect=[0, 0.05, 1, 0.99])
 
     return plt
