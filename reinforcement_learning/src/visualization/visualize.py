@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 from src.config.config import (  # pylint: disable=no-name-in-module, import-error
     CMAP,
@@ -92,3 +93,65 @@ def visualize_forest(policy, problem_size, title="Forest Management"):
 
     plt.axis("off")
     plt.savefig("./reports/figures/" + title + ".png", dpi=400)
+
+
+def visualize_statistics_frozen_lake(file_path, algorithm):
+
+    statistics = pd.read_csv(file_path)
+    statistics = statistics[statistics["method"] == algorithm]
+    _, axes = plt.subplots(2, 2, figsize=(10, 7))
+
+    axes[0, 0].plot(statistics["gamma"], statistics["time"], "o-", color="r")
+    axes[0, 0].set_title("Gamma vs Wall Time")
+
+    axes[0, 1].plot(
+        statistics["gamma"],
+        statistics["iterations"],
+        "o-",
+    )
+    axes[0, 1].set_title("Gamma vs Number of Iterations")
+
+    axes[1, 0].plot(
+        statistics["gamma"],
+        statistics["reward"],
+        "o-",
+        color="k",
+    )
+    axes[1, 0].set_title("Gamma vs Rewards")
+
+    axes[1, 1].plot(
+        statistics["gamma"],
+        statistics["success_rate"],
+        "o-",
+        color="b",
+    )
+    axes[1, 1].set_title("Gamma vs Success Rate")
+
+    return plt
+
+
+def visualize_statistics_forest(file_path, algorithm):
+
+    statistics = pd.read_csv(file_path)
+    statistics = statistics[statistics["method"] == algorithm]
+    _, axes = plt.subplots(1, 3, figsize=(10, 5))
+
+    axes[0].plot(statistics["gamma"], statistics["time"], "o-", color="r")
+    axes[0].set_title("Gamma vs Wall Time")
+
+    axes[1].plot(
+        statistics["gamma"],
+        statistics["iterations"],
+        "o-",
+    )
+    axes[1].set_title("Gamma vs Number of Iterations")
+
+    axes[2].plot(
+        statistics["gamma"],
+        statistics["reward"],
+        "o-",
+        color="k",
+    )
+    axes[2].set_title("Gamma vs Rewards")
+
+    return plt

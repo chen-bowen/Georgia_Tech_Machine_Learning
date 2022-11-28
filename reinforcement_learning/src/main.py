@@ -9,7 +9,12 @@ from src.config.config import (  # pylint: disable=no-name-in-module, import-err
     FROZEN_LAKE_MAPS,
     GAMMA_LIST,
 )
-from src.visualization.visualize import visualize_forest, visualize_policy_frozen_lake
+from src.visualization.visualize import (
+    visualize_forest,
+    visualize_policy_frozen_lake,
+    visualize_statistics_forest,
+    visualize_statistics_frozen_lake,
+)
 
 
 def frozen_lake_analysis(env_args):
@@ -76,6 +81,33 @@ def frozen_lake_analysis(env_args):
         f"./reports/figures/frozenLake_{env_args['map_name']}_q_learning.jpg", dpi=150
     )
 
+    visualize_statistics_frozen_lake(
+        f"./reports/stats/frozenLake_{env_args['map_name']}.csv", "policy_iteration"
+    )
+    plt.suptitle("Frozen Lake Statistics - Policy Iteration")
+    plt.savefig(
+        f"./reports/figures/frozenLake_{env_args['map_name']}_policy_iter_anylze.jpg",
+        dpi=150,
+    )
+
+    visualize_statistics_frozen_lake(
+        f"./reports/stats/frozenLake_{env_args['map_name']}.csv", "value_iteration"
+    )
+    plt.suptitle("Frozen Lake Statistics - Value Iteration")
+    plt.savefig(
+        f"./reports/figures/frozenLake_{env_args['map_name']}_value_iter_anylze.jpg",
+        dpi=150,
+    )
+
+    visualize_statistics_frozen_lake(
+        f"./reports/stats/frozenLake_{env_args['map_name']}.csv", "q_learning"
+    )
+    plt.suptitle("Frozen Lake Statistics - Q Learning")
+    plt.savefig(
+        f"./reports/figures/frozenLake_{env_args['map_name']}_q_learning_anylze.jpg",
+        dpi=150,
+    )
+
 
 def forest_management_analysis(problem_size):
     """Analyze the forest management agent given the problem size"""
@@ -105,7 +137,7 @@ def forest_management_analysis(problem_size):
         stats["method"] = method
         stats_list.append(stats)
     statistics = pd.concat(stats_list)
-    statistics.to_csv(f"./reports/stats/forrestManagement_{problem_size}.csv")
+    statistics.to_csv(f"./reports/stats/forestManagement_{problem_size}.csv")
 
     visualize_forest(
         optimal_policy_policy_iteration,
@@ -123,6 +155,33 @@ def forest_management_analysis(problem_size):
         title=f"Forest Management ({problem_size}) Q Learning",
     )
 
+    visualize_statistics_forest(
+        f"./reports/stats/forestManagement_{problem_size}.csv", "policy_iteration"
+    )
+    plt.suptitle("Forest Management Statistics - Policy Iteration")
+    plt.savefig(
+        f"./reports/figures/forestManagement_{problem_size}_policy_iter_anylze.jpg",
+        dpi=150,
+    )
+
+    visualize_statistics_forest(
+        f"./reports/stats/forestManagement_{problem_size}.csv", "value_iteration"
+    )
+    plt.suptitle("Forest Management Statistics - Value Iteration")
+    plt.savefig(
+        f"./reports/figures/forestManagement_{problem_size}_value_iter_anylze.jpg",
+        dpi=150,
+    )
+
+    visualize_statistics_forest(
+        f"./reports/stats/forestManagement_{problem_size}.csv", "q_learning"
+    )
+    plt.suptitle("Forest Management Statistics - Q Learning")
+    plt.savefig(
+        f"./reports/figures/forestManagement_{problem_size}_q_learning_anylze.jpg",
+        dpi=150,
+    )
+
 
 if __name__ == "__main__":
     # small frozen lake problem
@@ -135,13 +194,13 @@ if __name__ == "__main__":
     #     )
     # )
     # big frozen lake problem
-    frozen_lake_analysis(
-        dict(
-            id="FrozenLake-v1",
-            # desc=FROZEN_LAKE_MAPS["8x8"],
-            map_name="8x8",
-            is_slippery=False,
-        )
-    )
+    # frozen_lake_analysis(
+    #     dict(
+    #         id="FrozenLake-v1",
+    #         # desc=FROZEN_LAKE_MAPS["8x8"],
+    #         map_name="8x8",
+    #         is_slippery=False,
+    #     )
+    # )
     forest_management_analysis(problem_size=25)
     forest_management_analysis(problem_size=625)
