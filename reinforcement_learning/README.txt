@@ -1,5 +1,4 @@
 # Reinforcement Learning Project
-
 ### How to get data and the code
 
 The code: [link here](https://github.com/chen-bowen/Georgia_Tech_Machine_Learning/tree/main/reinforcement_learning)
